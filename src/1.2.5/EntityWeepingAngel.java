@@ -1,0 +1,875 @@
+package net.minecraft.src;
+
+import java.util.List;
+import java.util.Random;
+
+// Referenced classes of package net.minecraft.src:
+//            EntityMob, World, EntityPlayer, DamageSource, 
+//            InventoryPlayer, ItemStack, Item, MathHelper, 
+//            Entity, Vec3D, AxisAlignedBB, Block, 
+//            EntityLiving
+
+public class EntityWeepingAngel extends EntityMob
+{
+
+    public EntityWeepingAngel(World world)
+    {
+        super(world);
+        texture = "/angels/weepingangel.png";
+        attackStrength = 11;
+        stepHeight = 1.0F;
+        health = 15;
+        isImmuneToFire = true;
+        torchNextBreak = rand.nextInt(800);
+        armMovement = false;
+        aggressiveArmMovement = false;
+        spawntimer = 5;
+        //timeLocked = false;
+    }
+    
+    public int getMaxHealth()
+    {
+    	return 15;
+    }
+    
+    protected int getDropItemId()
+    {
+        	return 4;
+    }
+    
+    protected void dropFewItems(boolean par1, int par2)
+    {
+        int i = rand.nextInt(2 + par2);
+
+        for (int k = 0; k < i; k++)
+        {
+            dropItem(4, 1);
+        }
+    }
+    
+    protected void dropRareDrop(int par1)
+    {
+    	dropItem(mod_WeepingAngel.statue.shiftedIndex, 1);
+    }
+
+    protected Entity findPlayerToAttack()
+    {
+    	if(spawntimer < 0){
+    		EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 64D);
+    		if(entityplayer != null && canAngelBeSeen(entityplayer))
+    		{
+    			return entityplayer;
+    		}
+    		else
+    		{
+    			return null;
+    		}
+    	} 
+    	return null;
+
+    }
+
+    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    {
+        if(damagesource == null)
+        {
+            return false;
+        }
+        if(damagesource.getSourceOfDamage() instanceof EntityPlayer)
+        {
+            EntityPlayer entityplayer = (EntityPlayer)damagesource.getSourceOfDamage();
+            ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+            if(worldObj.difficultySetting > 2)
+            {
+                if(itemstack != null && (itemstack.itemID == Item.pickaxeDiamond.shiftedIndex || itemstack.canHarvestBlock(Block.obsidian)))
+                {
+                    super.attackEntityFrom(damagesource, i);
+                }
+            } else
+            if(itemstack != null && (itemstack.itemID == Item.pickaxeDiamond.shiftedIndex || itemstack.itemID == Item.pickaxeSteel.shiftedIndex || (itemstack.canHarvestBlock(Block.oreDiamond) && (itemstack.itemID != Item.pickaxeGold.shiftedIndex))))
+            {
+                super.attackEntityFrom(damagesource, i);
+            }
+        }
+        return false;
+    }
+
+    protected void attackEntity(Entity entity, float f)
+    {
+    	
+    	if(entityToAttack != null && (entityToAttack instanceof EntityPlayer) && !canAngelBeSeen((EntityPlayer)entityToAttack))
+    	{
+    		EntityPlayer entityPlayer = (EntityPlayer)entityToAttack;
+    		if(rand.nextInt(20) != 15)
+    		{
+    			super.attackEntity(entity, f);
+    		} else
+    		{
+    			if(mod_WeepingAngel.canTeleport && !entityPlayer.capabilities.isCreativeMode){
+
+    				if(getDistancetoEntityToAttack() <= 2)
+    				{
+    					teleportPlayer(entityToAttack);
+    					worldObj.playSoundAtEntity(entityToAttack, "mob.ghast.scream", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+    					worldObj.playSoundAtEntity(entityToAttack, "mob.angel.teleport_activate", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+    					for(int k = 0; k < 5; k++)
+    					{
+    						worldObj.spawnParticle("portal", entityToAttack.posX + (rand.nextDouble() - 0.5D) * (double)width, (entityToAttack.posY + rand.nextDouble() * (double)height) - 0.25D, entityToAttack.posZ + (rand.nextDouble() - 0.5D) * (double)width, (rand.nextDouble() - 0.5D) * 2D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2D);
+    					}
+    				}
+
+    			}
+    		}
+    	}
+    }
+
+    protected void updateEntityActionState()
+    {
+    	//if(timeLocked){
+    	//	return;
+    	//}
+        if(entityToAttack != null)
+        {
+            if(!canAngelBeSeen((EntityPlayer)entityToAttack))
+            {
+                super.updateEntityActionState();
+            }
+        }
+    	else
+        {
+            super.updateEntityActionState();
+        }
+    }
+
+    public void onUpdate()
+    {
+    	if(spawntimer >= 0)
+    		--spawntimer;
+        breakOnePerTick = false;
+        moveSpeed = entityToAttack != null ? 7F : 0.3F;
+        isJumping = false;
+        if(worldObj.isDaytime())
+        {
+            float f = getBrightness(1.0F);
+            if(f > 0.5F && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
+            {
+                canSeeSkyAndDay = true;
+            } else
+            {
+                canSeeSkyAndDay = false;
+            }
+        }
+        if(entityToAttack != null && (entityToAttack instanceof EntityPlayer))
+        {
+            if(!canAngelBeSeen((EntityPlayer)entityToAttack))
+            {
+                if((getDistancetoEntityToAttack() > 15D && timeTillNextTeleport-- < 0))
+                {
+                	func_35182_c(entityToAttack);
+                	worldObj.playSoundAtEntity(this, getMovementSound(), getSoundVolume() * 1.1f, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+                	timeTillNextTeleport = rand.nextInt(60) + 20;
+                }
+                //System.out.println(timeTillNextTeleport);
+                if((entityToAttack instanceof EntityPlayer) && getDistancetoEntityToAttack() <= 5D)
+                {
+                    texture = "/angels/weepingangel-angry.png";
+                    aggressiveArmMovement = true;
+                } else
+                {
+                    texture = "/angels/weepingangel.png";
+                    aggressiveArmMovement = false;
+                }
+                if((entityToAttack instanceof EntityPlayer) && getDistancetoEntityToAttack() > 5D && rand.nextInt(100) > 80)
+                {
+                    armMovement = !armMovement;
+                }
+            }
+            if(worldObj.getFullBlockLightValue(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) < 1 && worldObj.getFullBlockLightValue(MathHelper.floor_double(entityToAttack.posX), MathHelper.floor_double(entityToAttack.posY), MathHelper.floor_double(entityToAttack.posZ)) < 1 && randomSoundDelay > 0 && --randomSoundDelay == 0)
+            {
+                worldObj.playSoundAtEntity(this, "mob.ghast.scream", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+            }
+            if(slowPeriod > 0)
+            {
+            	slowPeriod--;
+                entityToAttack.motionX *= 0.01D;
+                entityToAttack.motionZ *= 0.01D;          	
+            }
+            //if(checkForOtherAngels())
+            //{
+            //	System.out.println("TimeLocked");
+            //	moveStrafing = moveForward = 0.0F;
+            //    moveSpeed = 0.0F;
+            //}
+            if((entityToAttack instanceof EntityPlayer) && (canAngelBeSeen((EntityPlayer)entityToAttack) || timeLocked))
+            {
+                angelDirectLook((EntityPlayer)entityToAttack);
+                moveStrafing = moveForward = 0.0F;
+                moveSpeed = 0.0F;
+                torchTimer++;
+                if(torchTimer >= torchNextBreak && !canSeeSkyAndDay)
+                {
+                    torchTimer = 0;
+                    torchNextBreak = rand.nextInt(1000) + 1000;
+                    findNearestTorch();
+                }
+            } else
+            {
+                faceEntity(entityToAttack, 100F, 100F);
+            }
+        }
+        super.onUpdate();
+    }
+
+    private boolean canAngelBeSeen(EntityPlayer entityplayer)
+    {
+        if(worldObj.getFullBlockLightValue(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) < 1)
+        {
+            randomSoundDelay = rand.nextInt(40);
+            return false;
+        }
+        if(entityplayer.canEntityBeSeen(this) || LineOfSightCheck(entityplayer))
+        {
+            return isInFieldOfVision(this, entityplayer, 70, 65);
+        } else
+        {
+            return false;
+        }
+    }
+    
+    private boolean LineOfSightCheck(EntityLiving entity)
+    {
+    	return (rayTraceBlocks(Vec3D.createVector(posX, posY + (double)getEyeHeight(), posZ), Vec3D.createVector(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ)) == null)
+    		|| (rayTraceBlocks(Vec3D.createVector(posX, posY + height, posZ), Vec3D.createVector(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ)) == null)
+    		|| (rayTraceBlocks(Vec3D.createVector(posX, posY + (height * 0.1), posZ), Vec3D.createVector(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ)) == null)
+    		|| (rayTraceBlocks(Vec3D.createVector(posX + 0.7, posY + (double)getEyeHeight(), posZ), Vec3D.createVector(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ)) == null)
+    		|| (rayTraceBlocks(Vec3D.createVector(posX - 0.7, posY + (double)getEyeHeight(), posZ), Vec3D.createVector(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ)) == null)
+    		|| (rayTraceBlocks(Vec3D.createVector(posX, posY + (double)getEyeHeight(), posZ + 0.7), Vec3D.createVector(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ)) == null)
+    		|| (rayTraceBlocks(Vec3D.createVector(posX, posY + (double)getEyeHeight(), posZ - 0.7), Vec3D.createVector(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ)) == null)
+    		|| (rayTraceBlocks(Vec3D.createVector(posX, posY + (height * 1.2), posZ - 0.7), Vec3D.createVector(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ)) == null)
+    		|| (rayTraceBlocks(Vec3D.createVector(posX, posY + (height * 1.2) + 1, posZ), Vec3D.createVector(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ)) == null);
+    }
+    
+    //C+P from world class. Modified for transparent blocks
+    private MovingObjectPosition rayTraceBlocks(Vec3D par1Vec3D, Vec3D par2Vec3D)
+    {
+    	boolean par3 = false;
+    	boolean par4 = false;
+    	
+        if (Double.isNaN(par1Vec3D.xCoord) || Double.isNaN(par1Vec3D.yCoord) || Double.isNaN(par1Vec3D.zCoord))
+        {
+            return null;
+        }
+
+        if (Double.isNaN(par2Vec3D.xCoord) || Double.isNaN(par2Vec3D.yCoord) || Double.isNaN(par2Vec3D.zCoord))
+        {
+            return null;
+        }
+
+        int i = MathHelper.floor_double(par2Vec3D.xCoord);
+        int j = MathHelper.floor_double(par2Vec3D.yCoord);
+        int k = MathHelper.floor_double(par2Vec3D.zCoord);
+        int l = MathHelper.floor_double(par1Vec3D.xCoord);
+        int i1 = MathHelper.floor_double(par1Vec3D.yCoord);
+        int j1 = MathHelper.floor_double(par1Vec3D.zCoord);
+        int k1 = worldObj.getBlockId(l, i1, j1);
+        int i2 = worldObj.getBlockMetadata(l, i1, j1);
+        Block block = Block.blocksList[k1];
+
+        if ((!par4 || block == null || block.getCollisionBoundingBoxFromPool(worldObj, l, i1, j1) != null) && k1 > 0 && block.canCollideCheck(i2, par3))
+        {
+            MovingObjectPosition movingobjectposition = block.collisionRayTrace(worldObj, l, i1, j1, par1Vec3D, par2Vec3D);
+
+            if (movingobjectposition != null)
+            {
+                return movingobjectposition;
+            }
+        }
+
+        for (int l1 = 200; l1-- >= 0;)
+        {
+            if (Double.isNaN(par1Vec3D.xCoord) || Double.isNaN(par1Vec3D.yCoord) || Double.isNaN(par1Vec3D.zCoord))
+            {
+                return null;
+            }
+
+            if (l == i && i1 == j && j1 == k)
+            {
+                return null;
+            }
+
+            boolean flag = true;
+            boolean flag1 = true;
+            boolean flag2 = true;
+            double d = 999D;
+            double d1 = 999D;
+            double d2 = 999D;
+
+            if (i > l)
+            {
+                d = (double)l + 1.0D;
+            }
+            else if (i < l)
+            {
+                d = (double)l + 0.0D;
+            }
+            else
+            {
+                flag = false;
+            }
+
+            if (j > i1)
+            {
+                d1 = (double)i1 + 1.0D;
+            }
+            else if (j < i1)
+            {
+                d1 = (double)i1 + 0.0D;
+            }
+            else
+            {
+                flag1 = false;
+            }
+
+            if (k > j1)
+            {
+                d2 = (double)j1 + 1.0D;
+            }
+            else if (k < j1)
+            {
+                d2 = (double)j1 + 0.0D;
+            }
+            else
+            {
+                flag2 = false;
+            }
+
+            double d3 = 999D;
+            double d4 = 999D;
+            double d5 = 999D;
+            double d6 = par2Vec3D.xCoord - par1Vec3D.xCoord;
+            double d7 = par2Vec3D.yCoord - par1Vec3D.yCoord;
+            double d8 = par2Vec3D.zCoord - par1Vec3D.zCoord;
+
+            if (flag)
+            {
+                d3 = (d - par1Vec3D.xCoord) / d6;
+            }
+
+            if (flag1)
+            {
+                d4 = (d1 - par1Vec3D.yCoord) / d7;
+            }
+
+            if (flag2)
+            {
+                d5 = (d2 - par1Vec3D.zCoord) / d8;
+            }
+
+            byte byte0 = 0;
+
+            if (d3 < d4 && d3 < d5)
+            {
+                if (i > l)
+                {
+                    byte0 = 4;
+                }
+                else
+                {
+                    byte0 = 5;
+                }
+
+                par1Vec3D.xCoord = d;
+                par1Vec3D.yCoord += d7 * d3;
+                par1Vec3D.zCoord += d8 * d3;
+            }
+            else if (d4 < d5)
+            {
+                if (j > i1)
+                {
+                    byte0 = 0;
+                }
+                else
+                {
+                    byte0 = 1;
+                }
+
+                par1Vec3D.xCoord += d6 * d4;
+                par1Vec3D.yCoord = d1;
+                par1Vec3D.zCoord += d8 * d4;
+            }
+            else
+            {
+                if (k > j1)
+                {
+                    byte0 = 2;
+                }
+                else
+                {
+                    byte0 = 3;
+                }
+
+                par1Vec3D.xCoord += d6 * d5;
+                par1Vec3D.yCoord += d7 * d5;
+                par1Vec3D.zCoord = d2;
+            }
+
+            Vec3D vec3d = Vec3D.createVector(par1Vec3D.xCoord, par1Vec3D.yCoord, par1Vec3D.zCoord);
+            l = (int)(vec3d.xCoord = MathHelper.floor_double(par1Vec3D.xCoord));
+
+            if (byte0 == 5)
+            {
+                l--;
+                vec3d.xCoord++;
+            }
+
+            i1 = (int)(vec3d.yCoord = MathHelper.floor_double(par1Vec3D.yCoord));
+
+            if (byte0 == 1)
+            {
+                i1--;
+                vec3d.yCoord++;
+            }
+
+            j1 = (int)(vec3d.zCoord = MathHelper.floor_double(par1Vec3D.zCoord));
+
+            if (byte0 == 3)
+            {
+                j1--;
+                vec3d.zCoord++;
+            }
+
+            int j2 = worldObj.getBlockId(l, i1, j1);
+            int k2 = worldObj.getBlockMetadata(l, i1, j1);
+            Block block1 = Block.blocksList[j2];
+
+            if ((!par4 || block1 == null || block1.getCollisionBoundingBoxFromPool(worldObj, l, i1, j1) != null) && j2 > 0 && block1.canCollideCheck(k2, par3) && !isBlockTransparent(j2))
+            {
+                MovingObjectPosition movingobjectposition1 = block1.collisionRayTrace(worldObj, l, i1, j1, par1Vec3D, par2Vec3D);
+
+                if (movingobjectposition1 != null)
+                {
+                    return movingobjectposition1;
+                }
+            }
+        }
+
+        return null;
+    }
+    
+    private boolean isBlockTransparent(int id)
+    {
+    	for(int i = 0; i < transparentBlocks.length; i++)
+    	{
+    		if(id == transparentBlocks[i])
+    		{
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    private boolean checkForOtherAngels()
+    {
+    	int a = 0;
+    	List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(20D, 20D, 20D));
+    	for(int j = 0; j < list.size(); j++)
+    	{
+    		Entity entity1 = (Entity)list.get(j);
+    		if(entity1 instanceof EntityWeepingAngel)
+    		{
+    			EntityWeepingAngel entityweepingangel = (EntityWeepingAngel)entity1;
+    			if(entityweepingangel.angelSeeAngel(this))
+    			{
+    				a++;
+    			}
+    		}
+    	}
+    	if(a > 0)
+    	{
+    		timeLocked = true;
+    	}else
+    	{
+    		timeLocked = false;
+    	}
+    	return a > 0;
+    }
+
+    private boolean angelDirectLook(EntityPlayer entityplayer)
+    {
+        if(worldObj.getFullBlockLightValue(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) < 1)
+        {
+            return false;
+        }
+        Vec3D vec3d = entityplayer.getLook(1.0F).normalize();
+        Vec3D vec3d1 = Vec3D.createVector(posX - entityplayer.posX, ((boundingBox.minY + (double)height) - entityplayer.posY) + (double)entityplayer.getEyeHeight(), posZ - entityplayer.posZ);
+        double d = vec3d1.lengthVector();
+        vec3d1 = vec3d1.normalize();
+        double d1 = vec3d.dotProduct(vec3d1);
+        if(d1 > 1.0D - 0.025000000000000001D / d)
+        {
+        	if(aggressiveArmMovement || armMovement)
+        		slowPeriod = rand.nextInt(100);
+            return entityplayer.canEntityBeSeen(this);
+        } else
+        {
+            return false;
+        }
+    }
+    
+    public boolean angelSeeAngel(EntityWeepingAngel entity)
+    {
+        if(worldObj.getFullBlockLightValue(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) < 1)
+        {
+            return false;
+        }
+        if(!armMovement || !aggressiveArmMovement)
+        {
+        	return false;
+        }
+        return isInFieldOfVision(entity, this, 40, 65);    
+        //Vec3D vec3d = entity.getLook(1.0F).normalize();
+        //Vec3D vec3d1 = Vec3D.createVector(posX - entity.posX, ((boundingBox.minY + (double)height) - entity.posY) + (double)entity.getEyeHeight(), posZ - entity.posZ);
+        //double d = vec3d1.lengthVector();
+        //vec3d1 = vec3d1.normalize();
+       // double d1 = vec3d.dotProduct(vec3d1);
+        //if(d1 > 1.0D - 0.025000000000000001D / d)
+       // {
+           // return entity.canEntityBeSeen(this);
+       // } else
+        //{
+        //    return false;
+        //}
+    }
+
+    public double getDistance(int i, int j, int k, int l, int i1, int j1)
+    {
+        int k1 = l - i;
+        int l1 = i1 - j;
+        int i2 = j1 - k;
+        return Math.sqrt(k1 * k1 + l1 * l1 + i2 * i2);
+    }
+
+    public double getDistancetoEntityToAttack()
+    {
+        if(entityToAttack instanceof EntityPlayer)
+        {
+            double d = entityToAttack.posX - posX;
+            double d2 = entityToAttack.posY - posY;
+            double d4 = entityToAttack.posZ - posZ;
+            return (double)MathHelper.sqrt_double(d * d + d2 * d2 + d4 * d4);
+        }
+        EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 64D);
+        if(entityplayer != null)
+        {
+            double d1 = entityplayer.posX - posX;
+            double d3 = entityplayer.posY - posY;
+            double d5 = entityplayer.posZ - posZ;
+            return (double)MathHelper.sqrt_double(d1 * d1 + d3 * d3 + d5 * d5);
+        } else
+        {
+            return 40000D;
+        }
+    }
+
+    private void findNearestTorch()
+    {
+        int i = (int)posX;
+        int j = (int)posY;
+        int k = (int)posZ;
+        int l = i + 10;
+        int i1 = j + 10;
+        int j1 = k + 10;
+        int k1 = i - 10;
+        int l1 = j - 10;
+        int i2 = k - 10;
+        int j2 = 100;
+        for(int k2 = k1; k2 < l; k2++)
+        {
+            for(int l2 = l1; l2 < i1; l2++)
+            {
+                for(int i3 = i2; i3 < j1; i3++)
+                {
+                    if(getDistance(i, j, k, k2, l2, i3) > (double)j2)
+                    {
+                        continue;
+                    }
+                    int j3 = worldObj.getBlockId(k2, l2, i3);
+                    Block block = j3 > 0 ? Block.blocksList[j3] : null;
+                    if(block == null || block != Block.torchWood && block != Block.torchRedstoneActive && block != Block.redstoneLampActive && block != Block.redstoneRepeaterActive && block != Block.glowStone || worldObj.rayTraceBlocks(Vec3D.createVector(posX, posY + (double)getEyeHeight(), posZ), Vec3D.createVector(k2, l2, i3)) != null || worldObj.rayTraceBlocks(Vec3D.createVector(entityToAttack.posX, entityToAttack.posY + (double)entityToAttack.getEyeHeight(), entityToAttack.posZ), Vec3D.createVector(k2, l2, i3)) != null)
+                    {
+                        continue;
+                    }
+                    if(!breakOnePerTick)
+                    {
+                        block.dropBlockAsItem(worldObj, k2, l2, i3, 1, 1);
+                        worldObj.setBlockWithNotify(k2, l2, i3, 0);
+                        worldObj.playSoundAtEntity(this, "mob.angel.light", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+                        breakOnePerTick = true;
+                    }
+                    break;
+                }
+
+            }
+
+        }
+
+    }
+
+    private boolean isInFieldOfVision(EntityWeepingAngel entityweepingangel, EntityLiving entityliving, float f4i, float f5i)
+    {
+        float f = entityliving.rotationYaw;
+        float f1 = entityliving.rotationPitch;
+        entityliving.faceEntity(entityweepingangel, 360F, 360F);
+        float f2 = entityliving.rotationYaw;
+        float f3 = entityliving.rotationPitch;
+        entityliving.rotationYaw = f;
+        entityliving.rotationPitch = f1;
+        f = f2;
+        f1 = f3;
+        float f4 = f4i; // 70f
+        float f5 = f5i; // 65f
+        float f6 = entityliving.rotationYaw - f4;
+        float f7 = entityliving.rotationYaw + f4;
+        float f8 = entityliving.rotationPitch - f5;
+        float f9 = entityliving.rotationPitch + f5;
+        boolean flag = GetFlag(f6, f7, f, 0.0F, 360F);
+        boolean flag1 = GetFlag(f8, f9, f1, -180F, 180F);
+        return flag && flag1 && (entityliving.canEntityBeSeen(entityweepingangel) || LineOfSightCheck(entityliving));
+    }
+
+    public boolean GetFlag(float f, float f1, float f2, float f3, float f4)
+    {
+        if(f < f3)
+        {
+            if(f2 >= f + f4)
+            {
+                return true;
+            }
+            if(f2 <= f1)
+            {
+                return true;
+            }
+        }
+        if(f1 >= f4)
+        {
+            if(f2 <= f1 - f4)
+            {
+                return true;
+            }
+            if(f2 >= f)
+            {
+                return true;
+            }
+        }
+        if(f1 < f4 && f >= f3)
+        {
+            return f2 <= f1 && f2 > f;
+        } else
+        {
+            return false;
+        }
+    }
+
+    private void teleportPlayer(Entity entity)
+    {
+        if(entity instanceof EntityPlayer)
+        {
+            int i = rand.nextInt(2);
+            int j = rand.nextInt(2);
+            int k = rand.nextInt(2);
+            int l = MathHelper.floor_double(posX);
+            int i1 = MathHelper.floor_double(posY);
+            int j1 = MathHelper.floor_double(posZ);
+            int k1 = l;
+            int l1 = i1;
+            int i2 = j1;
+            boolean flag = false;
+            do
+            {
+                if(flag)
+                {
+                    break;
+                }
+                int j2 = rand.nextInt(200);
+                int k2 = rand.nextInt(128);
+                int l2 = rand.nextInt(200);
+                k1 = i != 0 ? l - j2 : l + j2;
+                l1 = j != 0 ? i1 - k2 : i1 + k2;
+                i2 = k != 0 ? j1 - l2 : j1 + l2;
+                if(worldObj.blockExists(k1, l1, i2))
+                {
+                    int i3 = worldObj.getBlockId(k1, l1, i2);
+                    if(i3 == 1 || i3 == 2 || i3 == 3 || i3 == 4 || i3 == 5 || i3 == 12 || i3 == 13 || i3 == 24 || i3 == 16)
+                    {
+                        int j3 = worldObj.getBlockId(k1, l1 + 1, i2);
+                        if(worldObj.blockExists(k1, l1 + 1, i2) && j3 == 0)
+                        {
+                            int k3 = worldObj.getBlockId(k1, l1 + 2, i2);
+                            if(worldObj.blockExists(k1, l1 + 2, i2) && k3 == 0)
+                            {
+                                flag = true;
+                            }
+                        }
+                    }
+                }
+            } while(true);
+            entity.setLocationAndAngles(k1, (double)l1 + 1.0D, i2, entity.rotationYaw, entity.rotationPitch);
+        }
+    }
+    
+    protected boolean func_35178_q()
+    {
+        double d = posX + (rand.nextDouble() - 0.5D) * 64D;
+        double d1 = posY + (double)(rand.nextInt(64) - 32);
+        double d2 = posZ + (rand.nextDouble() - 0.5D) * 64D;
+        return func_35179_a_(d, d1, d2);
+    }
+
+    protected boolean func_35182_c(Entity entity)
+    {
+        Vec3D vec3d = Vec3D.createVector(posX - entity.posX, ((boundingBox.minY + (double)(height / 2.0F)) - entity.posY) + (double)entity.getEyeHeight(), posZ - entity.posZ);
+        vec3d = vec3d.normalize();
+        double d = 6D;
+        double d1 = (posX + (rand.nextDouble() - 0.5D) * 8D) - vec3d.xCoord * d;
+        double d2 = (posY + (double)(rand.nextInt(16) - 8)) - vec3d.yCoord * d;
+        double d3 = (posZ + (rand.nextDouble() - 0.5D) * 8D) - vec3d.zCoord * d;
+        return func_35179_a_(d1, d2, d3);
+    }
+
+    protected boolean func_35179_a_(double d, double d1, double d2)
+    {
+        double d3 = posX;
+        double d4 = posY;
+        double d5 = posZ;
+        posX = d;
+        posY = d1;
+        posZ = d2;
+        boolean flag = false;
+        int i = MathHelper.floor_double(posX);
+        int j = MathHelper.floor_double(posY);
+        int k = MathHelper.floor_double(posZ);
+        if(worldObj.blockExists(i, j, k))
+        {
+            boolean flag1;
+            for(flag1 = false; !flag1 && j > 0;)
+            {
+                int i1 = worldObj.getBlockId(i, j - 1, k);
+                if(i1 == 0 || !Block.blocksList[i1].blockMaterial.isSolid())
+                {
+                    posY--;
+                    j--;
+                } else
+                {
+                    flag1 = true;
+                }
+            }
+
+            if(flag1)
+            {
+                setPosition(posX, posY, posZ);
+                if(worldObj.getCollidingBoundingBoxes(this, boundingBox).size() == 0 && !worldObj.isAnyLiquid(boundingBox))
+                {
+                    flag = true;
+                }
+            }
+        }
+        if(!flag)
+        {
+            setPosition(d3, d4, d5);
+            return false;
+        }
+        int l = 128;
+       /* for(int j1 = 0; j1 < l; j1++)
+        {
+            double d6 = (double)j1 / ((double)l - 1.0D);
+            float f = (rand.nextFloat() - 0.5F) * 0.2F;
+            float f1 = (rand.nextFloat() - 0.5F) * 0.2F;
+            float f2 = (rand.nextFloat() - 0.5F) * 0.2F;
+            double d7 = d3 + (posX - d3) * d6 + (rand.nextDouble() - 0.5D) * (double)width * 2D;
+            double d8 = d4 + (posY - d4) * d6 + rand.nextDouble() * (double)height;
+            double d9 = d5 + (posZ - d5) * d6 + (rand.nextDouble() - 0.5D) * (double)width * 2D;
+            worldObj.spawnParticle("portal", d7, d8, d9, f, f1, f2);
+        }*/
+
+        return true;
+    }
+
+    public String getMovementSound()
+    {
+        if(entityToAttack != null && (entityToAttack instanceof EntityPlayer) && !isInFieldOfVision(this, (EntityPlayer)entityToAttack, 70, 65))
+        {
+            String s = "step.stone";
+            int i = rand.nextInt(4);
+            switch(i)
+            {
+            case 0: // '\0'
+                s = "mob.angel.stoneone";
+                break;
+
+            case 1: // '\001'
+                s = "mob.angel.stonetwo";
+                break;
+
+            case 2: // '\002'
+                s = "mob.angel.stonethree";
+                break;
+
+            case 3: // '\003'
+                s = "mob.angel.stonefour";
+                break;
+            }
+            return s;
+        } else
+        {
+            return "";
+        }
+    }
+    
+    protected String getLivingSound()
+    {
+    	if(rand.nextInt(10) == 1)
+    	{
+    	return getMovementSound();
+    	}
+    	return "";
+    }
+
+    protected String getHurtSound()
+    {
+        return "step.stone";
+    }
+
+    protected String getDeathSound()
+    {
+        return "mob.angel.crumble";
+    }
+    
+    public void setYaw(float f)
+    {
+    	rotationYaw = f;
+    }
+    
+    public int getMaxSpawnedInChunk()
+    {
+        return 10;
+    }
+
+    private int torchTimer;
+    private int torchNextBreak;
+    private boolean breakOnePerTick;
+    private boolean canSeeSkyAndDay;
+    private int randomSoundDelay;
+    public boolean armMovement;
+    public boolean aggressiveArmMovement;
+    private int slowPeriod;
+    private int timeTillNextTeleport;
+    private int spawntimer;
+    private boolean timeLocked;
+    private int[] transparentBlocks = { 20, 8, 9 , 10, 11, 18, 27, 
+    									28, 30, 31, 32, 37, 38, 39, 
+    									40, 44, 50, 51, 52, 59, 64, 
+    									65, 66, 67, 69, 70, 71, 72, 75, 
+    									76, 77, 78, 83, 85, 90, 92, 96, 
+    									101, 102, 106, 107, 108, 109, 
+    									111, 113, 114, 114, 117};
+}
