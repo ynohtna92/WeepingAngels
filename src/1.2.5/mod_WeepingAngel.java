@@ -29,7 +29,7 @@ public class mod_WeepingAngel extends BaseMod
 		//Weeping Angel Entity
 		ModLoader.registerEntityID(net.minecraft.src.EntityWeepingAngel.class, "Weeping Angel", ModLoader.getUniqueEntityId(), 0, 0xffffff);
 		if(spawnrate != 0){
-			ModLoader.addSpawn("WeepingAngel", spawnrate, 1, 3, EnumCreatureType.monster);
+			ModLoader.addSpawn("Weeping Angel", spawnrate, 1, 3, EnumCreatureType.monster);
 		}
 
 		//Spawn Block Entity
