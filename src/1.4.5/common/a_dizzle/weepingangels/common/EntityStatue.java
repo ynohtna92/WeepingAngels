@@ -1,4 +1,4 @@
-package WeepingAngels.common;
+package a_dizzle.weepingangels.common;
 
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.EntityLiving;
@@ -8,14 +8,12 @@ public class EntityStatue extends EntityLiving
 {
 	public int dropId;
 	public Class livingEntity;
-	public boolean canBeActivated;
 
 	public EntityStatue(World world)
 	{
 		super(world);
 		dropId = WeepingAngelsMod.statue.shiftedIndex;
 		livingEntity = EntityWeepingAngel.class;
-		canBeActivated = true;
 		texture = "/angels/weepingangel.png";
 	}
 

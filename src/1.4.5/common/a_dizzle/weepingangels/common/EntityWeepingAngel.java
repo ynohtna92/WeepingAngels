@@ -1,4 +1,4 @@
-package WeepingAngels.common;
+package a_dizzle.weepingangels.common;
 
 import java.util.List;
 import net.minecraft.src.Block;
@@ -49,6 +49,14 @@ public class EntityWeepingAngel extends EntityMob
 		spawntimer = 5;
 		//timeLocked = false;
 	}
+	
+	@Override
+    protected void entityInit()
+    {
+        super.entityInit();
+        this.dataWatcher.addObject(16, Byte.valueOf((byte)0)); //Angry
+        this.dataWatcher.addObject(17, Byte.valueOf((byte)0)); //ArmMovement
+    }
 	
 	@Override
 	public int getMaxHealth()
@@ -210,17 +218,24 @@ public class EntityWeepingAngel extends EntityMob
 				if(WeepingAngelsMod.DEBUG)System.out.println(timeTillNextTeleport);
 				if((entityToAttack instanceof EntityPlayer) && getDistancetoEntityToAttack() <= 5D)
 				{
-					texture = "/angels/weepingangel-angry.png";
-					aggressiveArmMovement = true;
+					this.texture = "/angels/weepingangel-angry.png";
+					this.aggressiveArmMovement = true;
+					this.dataWatcher.updateObject(16, Byte.valueOf((byte)1));
 					if(WeepingAngelsMod.DEBUG)System.out.println("Angry");
-				} else
+				}
+				else
 				{
-					texture = "/angels/weepingangel.png";
-					aggressiveArmMovement = false;
+					this.texture = "/angels/weepingangel.png";
+					this.aggressiveArmMovement = false;
+					this.dataWatcher.updateObject(16, Byte.valueOf((byte)0));
 				}
 				if((entityToAttack instanceof EntityPlayer) && getDistancetoEntityToAttack() > 5D && rand.nextInt(100) > 80)
 				{
 					armMovement = !armMovement;
+					if(armMovement) 
+						this.dataWatcher.updateObject(17, Byte.valueOf((byte)1));
+					else
+						this.dataWatcher.updateObject(17, Byte.valueOf((byte)0));
 				}
 			}
 			if(worldObj.getFullBlockLightValue(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) < 1 && worldObj.getFullBlockLightValue(MathHelper.floor_double(entityToAttack.posX), MathHelper.floor_double(entityToAttack.posY), MathHelper.floor_double(entityToAttack.posZ)) < 1 && randomSoundDelay > 0 && --randomSoundDelay == 0)
@@ -256,6 +271,8 @@ public class EntityWeepingAngel extends EntityMob
 				faceEntity(entityToAttack, 100F, 100F);
 			}
 		}
+		byte var1 = this.dataWatcher.getWatchableObjectByte(16);
+        this.texture = var1 == 1 ? "/angels/weepingangel-angry.png" : "/angels/weepingangel.png";
 		super.onUpdate();
 	}
 
@@ -870,7 +887,7 @@ public class EntityWeepingAngel extends EntityMob
 	@Override
 	protected String getLivingSound()
 	{
-		if(rand.nextInt(10) == 1)
+		if(rand.nextInt(10) > 8)
 		{
 			return getMovementSound();
 		}
@@ -898,6 +915,16 @@ public class EntityWeepingAngel extends EntityMob
 	public int getMaxSpawnedInChunk()
 	{
 		return 10;
+	}
+	
+	public boolean getAngry()
+	{
+		return this.dataWatcher.getWatchableObjectByte(16) == 1; 
+	}
+	
+	public boolean getArmMovement()
+	{
+		return this.dataWatcher.getWatchableObjectByte(17) == 1; 
 	}
 	
 	@Override

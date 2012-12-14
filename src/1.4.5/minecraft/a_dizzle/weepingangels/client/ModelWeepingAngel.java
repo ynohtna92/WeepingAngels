@@ -1,8 +1,8 @@
-package WeepingAngels.client;
+package a_dizzle.weepingangels.client;
 
+import a_dizzle.weepingangels.common.EntityWeepingAngel;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
-import WeepingAngels.common.EntityWeepingAngel;
 import net.minecraft.src.Entity;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.ModelBase;
@@ -171,7 +171,7 @@ public class ModelWeepingAngel extends ModelBase
     public void setRotationAngles(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
     {
     	if(entity instanceof EntityWeepingAngel){
-        if(((EntityWeepingAngel)entity).aggressiveArmMovement)
+        if(((EntityWeepingAngel)entity).getAngry())
         {
             angleX = toRadians(20F);
             angleY = toRadians(60F);
@@ -182,7 +182,7 @@ public class ModelWeepingAngel extends ModelBase
             angleY = toRadians(30F);
             angleZ = toRadians(5F);
         }
-        if(((EntityWeepingAngel)entity).aggressiveArmMovement)
+        if(((EntityWeepingAngel)entity).getAngry())
         {
             float f6 = MathHelper.sin(onGround * 3.141593F);
             float f7 = MathHelper.sin((1.0F - (1.0F - onGround) * (1.0F - onGround)) * 3.141593F);
@@ -193,7 +193,7 @@ public class ModelWeepingAngel extends ModelBase
             rightarm.rotateAngleX = -1.570796F;
             leftarm.rotateAngleX = -1.570796F;
         } else
-        if(((EntityWeepingAngel)entity).armMovement)
+        if(((EntityWeepingAngel)entity).getArmMovement())
         {
             rightarm.rotateAngleX = -1.04533F;
             rightarm.rotateAngleY = -0.55851F;

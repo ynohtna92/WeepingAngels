@@ -1,5 +1,7 @@
-package WeepingAngels.client;
+package a_dizzle.weepingangels.client;
 
+
+import a_dizzle.weepingangels.client.ModelWeepingAngel;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import net.minecraft.src.RenderLiving;

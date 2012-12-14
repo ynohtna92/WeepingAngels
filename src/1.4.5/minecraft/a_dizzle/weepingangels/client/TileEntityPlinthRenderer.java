@@ -1,14 +1,18 @@
-package WeepingAngels.client;
+package a_dizzle.weepingangels.client;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
+import a_dizzle.weepingangels.common.EntityStatue;
+import a_dizzle.weepingangels.common.TileEntityPlinth;
+import a_dizzle.weepingangels.common.WeepingAngelsMod;
+
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 
-import WeepingAngels.common.EntityStatue;
-import WeepingAngels.common.TileEntityPlinth;
-import WeepingAngels.common.WeepingAngelsMod;
 
+import net.minecraft.src.Entity;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.TileEntity;
@@ -18,7 +22,9 @@ import net.minecraft.src.World;
 @SideOnly(Side.CLIENT)
 public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
 {
-
+	public static TileEntityPlinthRenderer instance;
+    //private SignModel signModel;
+	
     public TileEntityPlinthRenderer()
     {
         instance = this;
@@ -30,13 +36,17 @@ public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
         GL11.glPushMatrix();
         float f1 = 0.6666667F;
         int i = tileentityplinth.getBlockMetadata();
+    
         EntityStatue entitystatue = null;
-        if(tileentityplinth.statueEntity == null)
+        if(tileentityplinth.getStatueEntity() == null)
         {
-            entitystatue = LoadStatue(tileentityplinth.statueType);
+            entitystatue = LoadStatue(tileentityplinth.getStatueType());
         }
-        if(entitystatue != null)
+        
+        if(entitystatue != null && tileentityplinth.getActivated())
         {
+        	System.out.println("Running!");
+        	/*
             entitystatue.setLocationAndAngles((double)tileentityplinth.xCoord + 0.5D, (double)tileentityplinth.yCoord + 0.5D, (double)tileentityplinth.zCoord + 0.5D, 0.0F, 0.0F);
             entitystatue.onGround = true;
             if(i == 8)
@@ -53,6 +63,28 @@ public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
             }
             ModLoader.getMinecraftInstance().theWorld.spawnEntityInWorld(entitystatue);
             tileentityplinth.statueEntity = entitystatue;
+            
+        	//testing to render an alternate way
+            this.bindTextureByName("/angels/statue.png");
+            GL11.glPushMatrix();
+            GL11.glDisable(GL11.GL_CULL_FACE);       
+            GL11.glTranslatef((float)d + 0.5F, (float)d1 + 2.0f, (float)d2 + 0.5F);
+            float var10 = 0.0625F;
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            GL11.glScalef(-1.0F, -1.0F, 1.0F);
+            GL11.glEnable(GL11.GL_ALPHA_TEST);
+            modelWeepingAngel.render((Entity)null, 0.0F, 0.0F, 0.0F, (float)(tileentityplinth.getRotation() * 360) / 16.0F, 0.0F, var10);
+            GL11.glPopMatrix();
+            */   
+        	entitystatue.setLocationAndAngles((double)tileentityplinth.xCoord + 0.5D, (double)tileentityplinth.yCoord + 0.5D, (double)tileentityplinth.zCoord + 0.5D, (float)(tileentityplinth.getRotation()* 360) / 16f, 0.0F);
+        	entitystatue.onGround = true;     
+            FMLClientHandler.instance().getClient().theWorld.spawnEntityInWorld(entitystatue);
+            tileentityplinth.statueEntity = entitystatue;     
+              
+    	}
+        if(!tileentityplinth.getActivated())
+        {
+        	tileentityplinth.statueEntity.setDead();
         }
         float f2 = 0.0F;
         if(i == 8)
@@ -105,7 +137,7 @@ public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
 
     private EntityStatue LoadStatue(int i)
     {
-        World world = ModLoader.getMinecraftInstance().theWorld;
+        World world = ModLoader.getMinecraftServerInstance().worldServers[0];
         if(i == WeepingAngelsMod.statue.shiftedIndex)
         {
             return new EntityStatue(world);
@@ -155,9 +187,6 @@ public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glPopMatrix();
     }
-
-    public static TileEntityPlinthRenderer instance;
-    //private SignModel signModel;
 
 	@Override
 	public void renderTileEntityAt(TileEntity var1, double var2, double var4,

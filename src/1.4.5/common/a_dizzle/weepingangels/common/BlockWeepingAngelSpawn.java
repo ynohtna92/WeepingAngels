@@ -1,4 +1,4 @@
-package WeepingAngels.common;
+package a_dizzle.weepingangels.common;
 
 import java.util.List;
 import java.util.Random;

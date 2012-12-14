@@ -1,4 +1,4 @@
-package WeepingAngels.common;
+package a_dizzle.weepingangels.common;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -16,6 +16,7 @@ public class ItemStatue extends Item
 {
 	private Class statue;
 	private int armorId;
+	public int statueYaw = 0;
 
 	protected ItemStatue(int i, Class class1)
 	{
@@ -30,7 +31,7 @@ public class ItemStatue extends Item
 	}
 	
 	@Override
-	public boolean onItemUseFirst(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
+	public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l, float par8, float par9, float par10)
 	{
 		if(l == 0)
 		{
@@ -66,7 +67,8 @@ public class ItemStatue extends Item
 		}
 		if(l == 1)
 		{
-			world.setBlockAndMetadataWithNotify(i, j, k, WeepingAngelsMod.plinthBlock.blockID, MathHelper.floor_double((double)(((entityplayer.rotationYaw + 180F) * 16F) / 360F) + 0.5D) & 0xf);
+			statueYaw = MathHelper.floor_double((double)((entityplayer.rotationYaw + 180f) * 16.0F / 360.0F) + 0.5D) & 15;
+			world.setBlockAndMetadataWithNotify(i, j, k, WeepingAngelsMod.plinthBlock.blockID, 0);
 		} else
 		{
 			world.setBlockAndMetadataWithNotify(i, j, k, WeepingAngelsMod.plinthBlock.blockID, l);
@@ -98,9 +100,11 @@ public class ItemStatue extends Item
 		{
 			FMLLog.getLogger().log(Level.SEVERE, securityexception.getMessage());
 		}
-		//TileEntityPlinth tileentityplinth = (TileEntityPlinth)world.getBlockTileEntity(i, j, k);
-		//tileentityplinth.statueType = entitystatue.dropId;
+		TileEntityPlinth tileentityplinth = (TileEntityPlinth)world.getBlockTileEntity(i, j, k);
+		tileentityplinth.setRotation(statueYaw);
+		tileentityplinth.statueType = entitystatue.dropId;
 		itemstack.stackSize--;
+		if(WeepingAngelsMod.DEBUG) System.out.println("l: " + l + " yaw: " + statueYaw + " playerYaw: " + entityplayer.rotationYaw);
 		/*if(tileentityplinth != null)
         {
             ModLoader.getMinecraftInstance().displayGuiScreen(new GuiEditPlinth(tileentityplinth));

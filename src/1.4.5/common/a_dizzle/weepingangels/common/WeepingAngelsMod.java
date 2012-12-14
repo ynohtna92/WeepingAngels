@@ -1,8 +1,9 @@
-package WeepingAngels.common;
+package a_dizzle.weepingangels.common;
 
 import java.util.logging.Level;
 
-import WeepingAngels.client.TileEntityPlinthRenderer;
+import a_dizzle.weepingangels.client.TileEntityPlinthRenderer;
+
 
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
@@ -24,13 +25,14 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod( modid = "WeepingAngelsMod", name = "Weeping Angels Mod", version = "1.5.5")
-@NetworkMod(clientSideRequired=true, serverSideRequired=false)
+@NetworkMod(clientSideRequired=true, serverSideRequired=false, channels = {"statue"}, packetHandler = PacketHandler.class)
 public class WeepingAngelsMod 
 {
 	public static Block	plinthBlock;
@@ -44,12 +46,12 @@ public class WeepingAngelsMod
 	public static int statueItemID;
 	public static int entityWeepingAngelID;
 	
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	@Instance("WeepingAngelsMod")
 	public static WeepingAngelsMod instance;
 
-	@SidedProxy(clientSide = "WeepingAngels.client.ClientProxyWeepingAngelsMod",serverSide = "WeepingAngels.common.CommonProxyWeepingAngelsMod" )
+	@SidedProxy(clientSide = "a_dizzle.weepingangels.client.ClientProxyWeepingAngelsMod",serverSide = "a_dizzle.weepingangels.common.CommonProxyWeepingAngelsMod" )
 	public static CommonProxyWeepingAngelsMod proxy;
 
 	@PreInit
@@ -81,6 +83,8 @@ public class WeepingAngelsMod
 	@Init
 	public void load(FMLInitializationEvent event)
 	{
+		proxy.registerRenderThings();
+		
 		plinthBlock = (new BlockPlinth(plinthBlockID, TileEntityPlinth.class, Material.rock)).setHardness(2.0F).setResistance(10F).setStepSound(Block.soundStoneFootstep).setBlockName("Plinth");		
 		blockWeepingAngelSpawn = new BlockWeepingAngelSpawn(spawnBlockID, 1).setHardness(0.5F).setBlockName("weepingangelspawn").setCreativeTab(CreativeTabs.tabMisc);	
 		statue = (new ItemStatue(statueItemID, EntityStatue.class)).setItemName("Statue").setCreativeTab(CreativeTabs.tabMisc).setMaxStackSize(64);
@@ -107,7 +111,7 @@ public class WeepingAngelsMod
 		LanguageRegistry.addName(statue,"Weeping Angel Statue");
 
 		ModLoader.registerTileEntity(TileEntityPlinth.class, "TileEntityPlinth", new TileEntityPlinthRenderer());
-		proxy.registerRenderThings();
+		
 	}
 
 	@PostInit

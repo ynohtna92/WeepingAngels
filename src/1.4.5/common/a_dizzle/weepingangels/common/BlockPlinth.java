@@ -1,4 +1,4 @@
-package WeepingAngels.common;
+package a_dizzle.weepingangels.common;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
@@ -15,7 +15,9 @@ import net.minecraft.src.World;
 
 public class BlockPlinth extends BlockContainer
 {
-
+    private Class signEntityClass;
+    private int idDrop;
+	
     protected BlockPlinth(int i, Class class1, Material material)
     {
         super(i, material);
@@ -53,23 +55,24 @@ public class BlockPlinth extends BlockContainer
         return l == 0 && i1 == 0 && (j1 == 0 || world.getBlockMaterial(i, j + 2, k) == Material.circuits);
     }
 
+    @Override
     public void updateTick(World world, int i, int j, int k, Random random)
     {
         if(world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k))
         {
+        	System.out.println("Powered");
             ComeToLife(world, i, j, k);
         }
     }
 
     private void ComeToLife(World world, int i, int j, int k)
-    {
-        TileEntityPlinth tileentityplinth = (TileEntityPlinth)world.getBlockTileEntity(i, j, k);
-        if(tileentityplinth.statueEntity != null)
+    {		
+    	TileEntityPlinth tileentityplinth = (TileEntityPlinth)world.getBlockTileEntity(i, j, k);
+ 		if(tileentityplinth.statueEntity != null)
         {
-        	float yaw = (float)tileentityplinth.statueEntity.rotationYaw;
             EntityStatue entitystatue = (EntityStatue)tileentityplinth.statueEntity;
             idDrop = entitystatue.dropId;
-            if(entitystatue.canBeActivated)
+            if(tileentityplinth.canBeActivated)
             {
                 tileentityplinth.statueEntity.setDead();
                 EntityLiving entityliving = null;
@@ -100,28 +103,33 @@ public class BlockPlinth extends BlockContainer
                 {
                 	FMLLog.log(Level.SEVERE, securityexception.getMessage());
                 }
-                entityliving.setPositionAndRotation(i + 0.5, j + 0.5, k + 0.5, yaw, 0.0F);
+                entityliving.setPositionAndRotation(i + 0.5, j + 0.5, k + 0.5, (float)(tileentityplinth.getRotation()* 360) / 16f, 0.0F);
                 //world.entityJoinedWorld(entityliving);
                 world.spawnEntityInWorld(entityliving);
-                entitystatue.canBeActivated = false;
+                tileentityplinth.canBeActivated = false;
             }
         }
     }
 
-    public void onBlockPlaced(World world, int i, int j, int k, int l)
+    @Override
+    public void onBlockAdded(World world, int i, int j, int k)
     {
         super.onBlockAdded(world, i, j, k);
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    @Override
+    public void breakBlock(World world, int i, int j, int k, int par5, int par6)
     {
+    	if(WeepingAngelsMod.DEBUG) System.out.println("BlockPlinth broken at i: " + i + " j: " + j + " k: " + k);
         TileEntityPlinth tileentityplinth = (TileEntityPlinth)world.getBlockTileEntity(i, j, k);
+        if(WeepingAngelsMod.DEBUG) System.out.println(tileentityplinth.statueEntity);
         if(tileentityplinth.statueEntity != null)
         {
             idDrop = ((EntityStatue)tileentityplinth.statueEntity).dropId;
+            if(WeepingAngelsMod.DEBUG) System.out.println("Dropped item: " + idDrop);
             tileentityplinth.statueEntity.setDead();
         }
-        super.breakBlock(world, i, j, k, k, k);
+        super.breakBlock(world, i, j, k, par5, par6);
     }
 
     public boolean renderAsNormalBlock()
@@ -133,24 +141,17 @@ public class BlockPlinth extends BlockContainer
     {
         return false;
     }
-    
-    public TileEntity createNewTileEntity(World var1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-    public TileEntity getBlockEntity()
+    @Override
+    public TileEntity createNewTileEntity(World war1)
     {
         try
         {
-            return (TileEntity)signEntityClass.newInstance();
+            return new TileEntityPlinth();
         }
         catch(Exception exception)
         {
             throw new RuntimeException(exception);
         }
     }
-
-    private Class signEntityClass;
-    private int idDrop;
 }
