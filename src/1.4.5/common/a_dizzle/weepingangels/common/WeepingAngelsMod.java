@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import a_dizzle.weepingangels.client.TileEntityPlinthRenderer;
 
 
+import net.minecraft.src.BiomeGenBase;
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityEggInfo;
@@ -91,13 +92,31 @@ public class WeepingAngelsMod
 
 		// Register all entities, blocks and items to game
 		//Weeping Angel Entity
-		EntityRegistry.registerModEntity(EntityWeepingAngel.class, "Weeping Angel", 1, this, 80, 3, true);
-		EntityList.IDtoClassMapping.put(entityWeepingAngelID, EntityWeepingAngel.class);
-		EntityList.entityEggs.put(entityWeepingAngelID, new EntityEggInfo(entityWeepingAngelID, 0, 0xffffff));
+		//EntityRegistry.registerModEntity(EntityWeepingAngel.class, "Weeping Angel", 1, this, 80, 3, true);
+		//EntityList.IDtoClassMapping.put(entityWeepingAngelID, EntityWeepingAngel.class);
+		//EntityList.entityEggs.put(entityWeepingAngelID, new EntityEggInfo(entityWeepingAngelID, 0, 0xffffff));
+		EntityRegistry.registerGlobalEntityID(EntityWeepingAngel.class, "Weeping Angel", ModLoader.getUniqueEntityId(), 0x00000, 0xffffff);
 		if(spawnrate != 0){
-			EntityRegistry.addSpawn(EntityWeepingAngel.class, spawnrate, 1, 3, EnumCreatureType.monster);
+			EntityRegistry.addSpawn(EntityWeepingAngel.class, spawnrate, 1, 3, EnumCreatureType.monster, new BiomeGenBase[] {
+				BiomeGenBase.iceMountains,
+				BiomeGenBase.icePlains,
+				BiomeGenBase.taiga,
+				BiomeGenBase.desert,
+				BiomeGenBase.desertHills,
+				BiomeGenBase.frozenOcean,
+				BiomeGenBase.plains,
+				BiomeGenBase.taiga,
+				BiomeGenBase.taigaHills,
+				BiomeGenBase.swampland,
+				BiomeGenBase.beach,
+				BiomeGenBase.river,
+				BiomeGenBase.frozenRiver,
+				BiomeGenBase.forest,
+				BiomeGenBase.forestHills,
+				BiomeGenBase.jungle
+		});
 		}
-		LanguageRegistry.instance().addStringLocalization("entity.WeepingAngelsMod.Weeping Angel.name", "Weeping Angel");
+		LanguageRegistry.instance().addStringLocalization("entity.Weeping Angel.name", "Weeping Angel");
 
 		//Spawn Block Entity
 		LanguageRegistry.addName(blockWeepingAngelSpawn, "Weeping Angel Spawn Block");

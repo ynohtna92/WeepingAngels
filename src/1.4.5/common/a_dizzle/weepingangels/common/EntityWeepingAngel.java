@@ -189,6 +189,7 @@ public class EntityWeepingAngel extends EntityMob
 	@Override
 	public void onUpdate()
 	{
+		if(WeepingAngelsMod.DEBUG)System.out.println("EWP Location x: " + this.posX + " y: " + this.posY+ " z: " + this.posZ);
 		if(spawntimer >= 0)
 			--spawntimer;
 		breakOnePerTick = false;

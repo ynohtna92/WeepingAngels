@@ -77,7 +77,7 @@ public class TileEntityPlinth extends TileEntity
 		{
 			this.statueEntity.readFromNBT(nbttagcompound);
 		}
-		System.out.println("rotation: "+ this.rotation + " Active: " + this.canBeActivated);
+		if(WeepingAngelsMod.DEBUG)System.out.println("rotation: "+ this.rotation + " Active: " + this.canBeActivated);
 	}
 
 	/**
