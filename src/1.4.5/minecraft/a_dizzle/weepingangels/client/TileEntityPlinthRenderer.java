@@ -23,6 +23,7 @@ import net.minecraft.src.World;
 public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
 {
 	public static TileEntityPlinthRenderer instance;
+	public static ModelWeepingAngel modelWeepingAngel = new ModelWeepingAngel();
     //private SignModel signModel;
 	
     public TileEntityPlinthRenderer()
@@ -36,16 +37,11 @@ public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
         GL11.glPushMatrix();
         float f1 = 0.6666667F;
         int i = tileentityplinth.getBlockMetadata();
-    
-        EntityStatue entitystatue = null;
-        if(tileentityplinth.getStatueEntity() == null)
+ 
+        if(i == 1)
         {
-            entitystatue = LoadStatue(tileentityplinth.getStatueType());
-        }
-        
-        if(entitystatue != null && tileentityplinth.getActivated())
-        {
-        	System.out.println("Running!");
+        	//System.out.println("Running!");
+ 
         	/*
             entitystatue.setLocationAndAngles((double)tileentityplinth.xCoord + 0.5D, (double)tileentityplinth.yCoord + 0.5D, (double)tileentityplinth.zCoord + 0.5D, 0.0F, 0.0F);
             entitystatue.onGround = true;
@@ -64,28 +60,25 @@ public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
             ModLoader.getMinecraftInstance().theWorld.spawnEntityInWorld(entitystatue);
             tileentityplinth.statueEntity = entitystatue;
             
-        	//testing to render an alternate way
-            this.bindTextureByName("/angels/statue.png");
+            entitystatue.setLocationAndAngles((double)tileentityplinth.xCoord + 0.5D, (double)tileentityplinth.yCoord + 0.5D, (double)tileentityplinth.zCoord + 0.5D, (float)(tileentityplinth.getRotation()* 360) / 16f, 0.0F);
+        	entitystatue.onGround = true;     
+            FMLClientHandler.instance().getClient().theWorld.spawnEntityInWorld(entitystatue);
+            tileentityplinth.statueEntity = entitystatue;  
+            */   
+        	
+            this.bindTextureByName("/angels/weepingangel.png");
             GL11.glPushMatrix();
             GL11.glDisable(GL11.GL_CULL_FACE);       
             GL11.glTranslatef((float)d + 0.5F, (float)d1 + 2.0f, (float)d2 + 0.5F);
             float var10 = 0.0625F;
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             GL11.glScalef(-1.0F, -1.0F, 1.0F);
+            GL11.glRotatef((float)(tileentityplinth.getRotation() * 360) / 16.0F + 180.0f, 0.0f, 1.0f, 0.0f);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
             modelWeepingAngel.render((Entity)null, 0.0F, 0.0F, 0.0F, (float)(tileentityplinth.getRotation() * 360) / 16.0F, 0.0F, var10);
             GL11.glPopMatrix();
-            */   
-        	entitystatue.setLocationAndAngles((double)tileentityplinth.xCoord + 0.5D, (double)tileentityplinth.yCoord + 0.5D, (double)tileentityplinth.zCoord + 0.5D, (float)(tileentityplinth.getRotation()* 360) / 16f, 0.0F);
-        	entitystatue.onGround = true;     
-            FMLClientHandler.instance().getClient().theWorld.spawnEntityInWorld(entitystatue);
-            tileentityplinth.statueEntity = entitystatue;     
               
     	}
-        if(!tileentityplinth.getActivated())
-        {
-        	tileentityplinth.statueEntity.setDead();
-        }
         float f2 = 0.0F;
         if(i == 8)
         {

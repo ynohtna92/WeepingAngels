@@ -2,6 +2,7 @@ package a_dizzle.weepingangels.common;
 
 import java.util.Iterator;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import net.minecraft.src.Entity;
@@ -32,7 +33,7 @@ public class TileEntityPlinth extends TileEntity
 	{
 		lineBeingEdited = -1;
 		isEditable = true;
-		this.canBeActivated = true;
+		canBeActivated = true; 
 	}
 
 	public void updateEntity()
@@ -76,7 +77,7 @@ public class TileEntityPlinth extends TileEntity
 		{
 			this.statueEntity.readFromNBT(nbttagcompound);
 		}
-		System.out.println(this.rotation);
+		System.out.println("rotation: "+ this.rotation + " Active: " + this.canBeActivated);
 	}
 
 	/**
@@ -106,6 +107,12 @@ public class TileEntityPlinth extends TileEntity
 	public void setRotation(int par1)
 	{
 		this.rotation = par1;
+	}
+	
+	public void setActivated(boolean var1)
+	{
+		FMLClientHandler.instance().getServer().worldServers[0].setBlockMetadata(this.xCoord, this.yCoord, this.zCoord, var1 ? 1 : 0);
+		FMLClientHandler.instance().getClient().theWorld.setBlockMetadata(this.xCoord, this.yCoord, this.zCoord, var1 ? 1 : 0);
 	}
 
 	@SideOnly(Side.CLIENT)

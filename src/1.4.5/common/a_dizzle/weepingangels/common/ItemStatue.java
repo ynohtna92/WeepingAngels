@@ -68,7 +68,7 @@ public class ItemStatue extends Item
 		if(l == 1)
 		{
 			statueYaw = MathHelper.floor_double((double)((entityplayer.rotationYaw + 180f) * 16.0F / 360.0F) + 0.5D) & 15;
-			world.setBlockAndMetadataWithNotify(i, j, k, WeepingAngelsMod.plinthBlock.blockID, 0);
+			world.setBlockAndMetadataWithNotify(i, j, k, WeepingAngelsMod.plinthBlock.blockID, 1);
 		} else
 		{
 			world.setBlockAndMetadataWithNotify(i, j, k, WeepingAngelsMod.plinthBlock.blockID, l);
