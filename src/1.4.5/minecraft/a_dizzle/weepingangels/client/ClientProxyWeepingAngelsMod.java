@@ -1,5 +1,6 @@
 package a_dizzle.weepingangels.client;
 
+import net.minecraft.src.ModLoader;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -24,6 +25,7 @@ public class ClientProxyWeepingAngelsMod extends CommonProxyWeepingAngelsMod{
 		RenderingRegistry.registerEntityRenderingHandler(EntityStatue.class, new RenderWeepingAngelStatue());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlinth.class, new TileEntityPlinthRenderer());
+		ModLoader.registerTileEntity(TileEntityPlinth.class, "TileEntityPlinth", new TileEntityPlinthRenderer());
 	}
 
 	public void preInit()

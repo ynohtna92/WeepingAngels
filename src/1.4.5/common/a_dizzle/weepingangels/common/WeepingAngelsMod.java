@@ -127,8 +127,6 @@ public class WeepingAngelsMod
 		statue.setIconIndex(ModLoader.addOverride("/gui/items.png", "/resources/statue.png"));
 		LanguageRegistry.addName(plinthBlock, "Plinth");
 		LanguageRegistry.addName(statue,"Weeping Angel Statue");
-
-		ModLoader.registerTileEntity(TileEntityPlinth.class, "TileEntityPlinth", new TileEntityPlinthRenderer());
 		
 	}
 
