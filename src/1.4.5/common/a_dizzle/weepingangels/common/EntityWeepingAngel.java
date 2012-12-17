@@ -92,7 +92,7 @@ public class EntityWeepingAngel extends EntityMob
 	{
 		if(spawntimer < 0){
 			EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 64D);
-			if(entityplayer != null && canAngelBeSeen(entityplayer))
+			if(entityplayer != null && canAngelBeSeenMultiplayer())
 			{
 				return entityplayer;
 			}
@@ -135,7 +135,7 @@ public class EntityWeepingAngel extends EntityMob
 	protected void attackEntity(Entity entity, float f)
 	{
 
-		if(entityToAttack != null && (entityToAttack instanceof EntityPlayer) && !canAngelBeSeen((EntityPlayer)entityToAttack))
+		if(entityToAttack != null && (entityToAttack instanceof EntityPlayer) && !canAngelBeSeenMultiplayer())
 		{
 			EntityPlayer entityPlayer = (EntityPlayer)entityToAttack;
 			if(rand.nextInt(40) != 1)
@@ -175,7 +175,7 @@ public class EntityWeepingAngel extends EntityMob
 		//}
 		if(entityToAttack != null)
 		{
-			if(!canAngelBeSeen((EntityPlayer)entityToAttack))
+			if(!canAngelBeSeenMultiplayer())
 			{
 				super.updateEntityActionState();
 			}
@@ -189,7 +189,7 @@ public class EntityWeepingAngel extends EntityMob
 	@Override
 	public void onUpdate()
 	{
-		if(WeepingAngelsMod.DEBUG)System.out.println("EWP Location x: " + this.posX + " y: " + this.posY+ " z: " + this.posZ);
+		//if(WeepingAngelsMod.DEBUG)System.out.println("EWP Location x: " + this.posX + " y: " + this.posY+ " z: " + this.posZ);
 		if(spawntimer >= 0)
 			--spawntimer;
 		breakOnePerTick = false;
@@ -208,7 +208,7 @@ public class EntityWeepingAngel extends EntityMob
 		}
 		if(entityToAttack != null && (entityToAttack instanceof EntityPlayer))
 		{
-			if(!canAngelBeSeen((EntityPlayer)entityToAttack))
+			if(!canAngelBeSeenMultiplayer())
 			{
 				if((getDistancetoEntityToAttack() > 15D && timeTillNextTeleport-- < 0))
 				{
@@ -255,7 +255,7 @@ public class EntityWeepingAngel extends EntityMob
 			//	moveStrafing = moveForward = 0.0F;
 			//    moveSpeed = 0.0F;
 			//}
-			if((entityToAttack instanceof EntityPlayer) && (canAngelBeSeen((EntityPlayer)entityToAttack) || timeLocked))
+			if((entityToAttack instanceof EntityPlayer) && (canAngelBeSeenMultiplayer() || timeLocked))
 			{
 				angelDirectLook((EntityPlayer)entityToAttack);
 				moveStrafing = moveForward = 0.0F;
@@ -288,6 +288,36 @@ public class EntityWeepingAngel extends EntityMob
 		{
 			return isInFieldOfVision(this, entityplayer, 70, 65);
 		} else
+		{
+			return false;
+		}
+	}
+	
+	private boolean canAngelBeSeenMultiplayer()
+	{
+		if(worldObj.getFullBlockLightValue(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) < 1)
+		{
+			randomSoundDelay = rand.nextInt(40);
+			return false;
+		}
+		int i = 0;
+		List list = worldObj.getEntitiesWithinAABB(EntityPlayer.class, boundingBox.expand(64D, 20D, 64D));
+		for(int j = 0; j < list.size(); j++)
+		{
+			EntityPlayer entity1 = (EntityPlayer)list.get(j);
+			if(entity1 instanceof EntityPlayer)
+			{
+				if(canAngelBeSeen(entity1))
+				{
+					i++;
+				}
+			}
+		}
+		if(i > 0)
+		{
+			return true;
+		}
+		else
 		{
 			return false;
 		}
