@@ -1,7 +1,12 @@
-Weeping Angels Minecraft Mod: Weeping Angels mob from doctor who is added to the game.
+Weeping Angels Minecraft Mod  
+===========================
 
-Author: A_Dizzle
+Current Minecraft Version: 1.4.5   
+Forge Version: 6.4.1.433  
 
-MCP Compiled 
+Author: A_dizzle  
 
-REQUIREMENTS: Audiomod and Modloader, Soon to be forge compatible.
+Description
+-----------
+This Mod adds the Weeping Angel (A Monster from the tv series Doctor Who) to Minecraft.
+
