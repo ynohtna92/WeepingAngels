@@ -1,0 +1,16 @@
+[
+{
+  "modid": "WeepingAngelsMod",
+  "name": "Weeping Angels Mod",
+  "description": "Don't Blink",
+  "version": "1.5.5",
+  "credits": "To everyone who contributed to the creation of this mod!",
+  "logoFile": "/resources/weepingangelsbanner.png",
+  "url": "http://www.minecraftforum.net/topic/694829-",
+  "updateUrl": "",
+  "authors": ["a_dizzle"],
+  "parent":"",
+  "screenshots": [],
+  "dependencies": []
+}
+]
