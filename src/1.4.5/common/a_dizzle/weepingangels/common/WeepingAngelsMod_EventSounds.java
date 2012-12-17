@@ -13,13 +13,13 @@ public class WeepingAngelsMod_EventSounds {
 	{
 		try
 		{
-			event.manager.soundPoolSounds.addSound("angel/crumble.ogg", WeepingAngelsMod.class.getResource("mod/sound/mob/angel/crumble.ogg"));
-			event.manager.soundPoolSounds.addSound("angel/light.ogg", WeepingAngelsMod.class.getResource("mod/sound/mob/angel/light.ogg"));
-			event.manager.soundPoolSounds.addSound("angel/stone1.ogg", WeepingAngelsMod.class.getResource("mod/sound/mob/angel/stone1.ogg"));
-			event.manager.soundPoolSounds.addSound("angel/stone2.ogg", WeepingAngelsMod.class.getResource("mod/sound/mob/angel/stone2.ogg"));
-			event.manager.soundPoolSounds.addSound("angel/stone3.ogg", WeepingAngelsMod.class.getResource("mod/sound/mob/angel/stone3.ogg"));
-			event.manager.soundPoolSounds.addSound("angel/stone4.ogg", WeepingAngelsMod.class.getResource("mod/sound/mob/angel/stone4.ogg"));
-			event.manager.soundPoolSounds.addSound("angel/teleport_activate.ogg", WeepingAngelsMod.class.getResource("mod/sound/mob/angel/teleport_activate.ogg"));
+			event.manager.soundPoolSounds.addSound("resources/crumble.ogg", WeepingAngelsMod.class.getResource("/resources/crumble.ogg"));
+			event.manager.soundPoolSounds.addSound("resources/light.ogg", WeepingAngelsMod.class.getResource("/resourceslight.ogg"));
+			event.manager.soundPoolSounds.addSound("resources/stone1.ogg", WeepingAngelsMod.class.getResource("/resources/stone1.ogg"));
+			event.manager.soundPoolSounds.addSound("resources/stone2.ogg", WeepingAngelsMod.class.getResource("/resources/stone2.ogg"));
+			event.manager.soundPoolSounds.addSound("resources/stone3.ogg", WeepingAngelsMod.class.getResource("/resources/stone3.ogg"));
+			event.manager.soundPoolSounds.addSound("resources/stone4.ogg", WeepingAngelsMod.class.getResource("/resources/stone4.ogg"));
+			event.manager.soundPoolSounds.addSound("resources/teleport_activate.ogg", WeepingAngelsMod.class.getResource("/resources/teleport_activate.ogg"));
 		}
 		catch(Exception e)
 		{

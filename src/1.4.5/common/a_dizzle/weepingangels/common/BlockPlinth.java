@@ -56,7 +56,7 @@ public class BlockPlinth extends BlockContainer
 	{
 		if(world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k))
 		{
-			System.out.println("Powered");
+			if(WeepingAngelsMod.DEBUG) System.out.println("Powered");
 			ComeToLife(world, i, j, k);
 			idDrop = 0;
 		}

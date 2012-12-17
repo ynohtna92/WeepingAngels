@@ -58,8 +58,7 @@ public class WeepingAngelsMod
 	@PreInit
 	public void	preInit(FMLPreInitializationEvent event)
 	{
-		//proxy.preInit();
-		//MinecraftForge.EVENT_BUS.register(new WeepingAngelsMod_EventSounds()); // Sound //Not Required!!
+		proxy.preInit();
 
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		try
@@ -124,8 +123,8 @@ public class WeepingAngelsMod
 		//Statue Block and Item
 		GameRegistry.registerBlock(plinthBlock);
 		GameRegistry.registerBlock(blockWeepingAngelSpawn);
-		plinthBlock.blockIndexInTexture = ModLoader.addOverride("/terrain.png", "/angels/plinth.png");
-		statue.setIconIndex(ModLoader.addOverride("/gui/items.png", "/angels/statue.png"));
+		plinthBlock.blockIndexInTexture = ModLoader.addOverride("/terrain.png", "/resources/plinth.png");
+		statue.setIconIndex(ModLoader.addOverride("/gui/items.png", "/resources/statue.png"));
 		LanguageRegistry.addName(plinthBlock, "Plinth");
 		LanguageRegistry.addName(statue,"Weeping Angel Statue");
 

@@ -39,7 +39,7 @@ public class EntityWeepingAngel extends EntityMob
 	public EntityWeepingAngel(World world)
 	{
 		super(world);
-		this.texture = "/angels/weepingangel.png";
+		this.texture = "/resources/weepingangel.png";
 		this.stepHeight = 1.0F;
 		this.health = 15;
 		this.isImmuneToFire = true;
@@ -158,7 +158,7 @@ public class EntityWeepingAngel extends EntityMob
 						{
 							worldObj.spawnParticle("portal", entityToAttack.posX + (rand.nextDouble() - 0.5D) * (double)width, (entityToAttack.posY + rand.nextDouble() * (double)height) - 0.25D, entityToAttack.posZ + (rand.nextDouble() - 0.5D) * (double)width, (rand.nextDouble() - 0.5D) * 2D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2D);
 						}
-						worldObj.playSoundAtEntity(entityToAttack, "mob.angel.teleport_activate", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+						worldObj.playSoundAtEntity(entityToAttack, "resources.teleport_activate", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
 						
 					}
 
@@ -219,14 +219,14 @@ public class EntityWeepingAngel extends EntityMob
 				if(WeepingAngelsMod.DEBUG)System.out.println(timeTillNextTeleport);
 				if((entityToAttack instanceof EntityPlayer) && getDistancetoEntityToAttack() <= 5D)
 				{
-					this.texture = "/angels/weepingangel-angry.png";
+					this.texture = "/resources/weepingangel-angry.png";
 					this.aggressiveArmMovement = true;
 					this.dataWatcher.updateObject(16, Byte.valueOf((byte)1));
 					if(WeepingAngelsMod.DEBUG)System.out.println("Angry");
 				}
 				else
 				{
-					this.texture = "/angels/weepingangel.png";
+					this.texture = "/resources/weepingangel.png";
 					this.aggressiveArmMovement = false;
 					this.dataWatcher.updateObject(16, Byte.valueOf((byte)0));
 				}
@@ -273,7 +273,7 @@ public class EntityWeepingAngel extends EntityMob
 			}
 		}
 		byte var1 = this.dataWatcher.getWatchableObjectByte(16);
-        this.texture = var1 == 1 ? "/angels/weepingangel-angry.png" : "/angels/weepingangel.png";
+        this.texture = var1 == 1 ? "/resources/weepingangel-angry.png" : "/resources/weepingangel.png";
 		super.onUpdate();
 	}
 
@@ -690,7 +690,7 @@ public class EntityWeepingAngel extends EntityMob
 					{
 						block.dropBlockAsItem(worldObj, k2, l2, i3, 1, 1);
 						worldObj.setBlockWithNotify(k2, l2, i3, 0);
-						worldObj.playSoundAtEntity(this, "mob.angel.light", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+						worldObj.playSoundAtEntity(this, "resources.light", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
 						breakOnePerTick = true;
 					}
 					break;
@@ -908,7 +908,7 @@ public class EntityWeepingAngel extends EntityMob
 			}
 			return s;
 			*/
-			return "mob.angel.stone";
+			return "resources.stone";
 		} else
 		{
 			return "";
@@ -934,7 +934,7 @@ public class EntityWeepingAngel extends EntityMob
 	@Override
 	protected String getDeathSound()
 	{
-		return "mob.angel.crumble";
+		return "resources.crumble";
 	}
 
 	public void setYaw(float f)

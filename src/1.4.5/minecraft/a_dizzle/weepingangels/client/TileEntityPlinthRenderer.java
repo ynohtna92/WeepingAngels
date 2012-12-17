@@ -66,7 +66,7 @@ public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
             tileentityplinth.statueEntity = entitystatue;  
             */   
         	
-            this.bindTextureByName("/angels/weepingangel.png");
+            this.bindTextureByName("/resources/weepingangel.png");
             GL11.glPushMatrix();
             GL11.glDisable(GL11.GL_CULL_FACE);       
             GL11.glTranslatef((float)d + 0.5F, (float)d1 + 2.0f, (float)d2 + 0.5F);
