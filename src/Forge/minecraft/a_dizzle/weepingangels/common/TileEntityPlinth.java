@@ -112,7 +112,7 @@ public class TileEntityPlinth extends TileEntity
 	public void setActivated(boolean var1)
 	{
 		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, var1 ? 1 : 0);
-		FMLClientHandler.instance().getClient().theWorld.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, var1 ? 1 : 0);
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	@SideOnly(Side.CLIENT)
