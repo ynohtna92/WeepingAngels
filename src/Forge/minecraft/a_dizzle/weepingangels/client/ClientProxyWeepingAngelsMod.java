@@ -12,6 +12,7 @@ import a_dizzle.weepingangels.common.CommonProxyWeepingAngelsMod;
 import a_dizzle.weepingangels.common.EntityStatue;
 import a_dizzle.weepingangels.common.EntityWeepingAngel;
 import a_dizzle.weepingangels.common.TileEntityPlinth;
+import a_dizzle.weepingangels.common.WeepingAngelsMod;
 import a_dizzle.weepingangels.common.WeepingAngelsMod_EventSounds;
 
 public class ClientProxyWeepingAngelsMod extends CommonProxyWeepingAngelsMod{
@@ -26,6 +27,9 @@ public class ClientProxyWeepingAngelsMod extends CommonProxyWeepingAngelsMod{
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlinth.class, new TileEntityPlinthRenderer());
 		ModLoader.registerTileEntity(TileEntityPlinth.class, "TileEntityPlinth", new TileEntityPlinthRenderer());
+		
+		WeepingAngelsMod.plinthBlock.blockIndexInTexture = ModLoader.addOverride("/terrain.png", "/resources/plinth.png");
+		WeepingAngelsMod.statue.setIconIndex(ModLoader.addOverride("/gui/items.png", "/resources/statue.png"));
 	}
 
 	public void preInit()

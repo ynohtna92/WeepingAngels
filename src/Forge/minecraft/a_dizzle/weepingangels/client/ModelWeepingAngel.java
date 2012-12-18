@@ -3,10 +3,10 @@ package a_dizzle.weepingangels.client;
 import a_dizzle.weepingangels.common.EntityWeepingAngel;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
-import net.minecraft.src.Entity;
-import net.minecraft.src.MathHelper;
-import net.minecraft.src.ModelBase;
-import net.minecraft.src.ModelRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.MathHelper;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelRenderer;
 
 @SideOnly(Side.CLIENT)
 public class ModelWeepingAngel extends ModelBase

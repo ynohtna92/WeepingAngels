@@ -3,13 +3,13 @@ package a_dizzle.weepingangels.common;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.src.AxisAlignedBB;
-import net.minecraft.src.Block;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.Material;
-import net.minecraft.src.MathHelper;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.block.material.Material;
+import net.minecraft.util.MathHelper;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.World;
+import net.minecraft.world.World;
 
 public class BlockWeepingAngelSpawn extends Block{
 
@@ -45,7 +45,7 @@ public class BlockWeepingAngelSpawn extends Block{
 		Random rand = new Random();
 		int i1 = world.getBlockMetadata((int)i,(int)j, (int)k);
 		EntityWeepingAngel ewp = new EntityWeepingAngel(world);
-		ewp.setLocationAndAngles(i+0.5, j+1, k + 0.5,rand.nextFloat() * 360f,0f);
+		ewp.setLocationAndAngles(i+0.5, j+1, k + 0.5,(float)(rand.nextInt(15)* 360) / 16f,0f);
 		world.spawnEntityInWorld(ewp);
 	}	
 }

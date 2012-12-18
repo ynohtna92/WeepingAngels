@@ -12,12 +12,12 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 
 
-import net.minecraft.src.Entity;
-import net.minecraft.src.FontRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.TileEntitySpecialRenderer;
-import net.minecraft.src.World;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
 public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer

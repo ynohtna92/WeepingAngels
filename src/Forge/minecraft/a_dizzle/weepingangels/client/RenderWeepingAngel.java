@@ -3,10 +3,10 @@ package a_dizzle.weepingangels.client;
 import a_dizzle.weepingangels.common.EntityWeepingAngel;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.ModelVillager;
-import net.minecraft.src.RenderLiving;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.client.model.ModelVillager;
+import net.minecraft.client.renderer.entity.RenderLiving;
 
 @SideOnly(Side.CLIENT)
 public class RenderWeepingAngel extends RenderLiving

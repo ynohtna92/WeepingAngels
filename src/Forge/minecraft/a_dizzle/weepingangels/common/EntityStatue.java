@@ -1,8 +1,8 @@
 package a_dizzle.weepingangels.common;
 
-import net.minecraft.src.DamageSource;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.World;
+import net.minecraft.util.DamageSource;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.world.World;
 
 public class EntityStatue extends EntityLiving
 {

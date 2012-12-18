@@ -5,17 +5,17 @@ import java.util.Iterator;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityList;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.INetworkManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.network.INetworkManager;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.NBTBase;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet;
-import net.minecraft.src.Packet132TileEntityData;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class TileEntityPlinth extends TileEntity
 {
@@ -111,8 +111,8 @@ public class TileEntityPlinth extends TileEntity
 	
 	public void setActivated(boolean var1)
 	{
-		FMLClientHandler.instance().getServer().worldServers[0].setBlockMetadata(this.xCoord, this.yCoord, this.zCoord, var1 ? 1 : 0);
-		FMLClientHandler.instance().getClient().theWorld.setBlockMetadata(this.xCoord, this.yCoord, this.zCoord, var1 ? 1 : 0);
+		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, var1 ? 1 : 0);
+		FMLClientHandler.instance().getClient().theWorld.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, var1 ? 1 : 0);
 	}
 
 	@SideOnly(Side.CLIENT)
