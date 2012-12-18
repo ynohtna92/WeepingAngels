@@ -148,6 +148,7 @@ public class EntityWeepingAngel extends EntityMob
 					if(getDistancetoEntityToAttack() <= 2)
 					{
 						worldObj.playSoundEffect(entityToAttack.posX, entityToAttack.posY, entityToAttack.posZ, "mob.ghast.scream", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+						worldObj.playSoundAtEntity(entityToAttack, "resources.teleport_activate", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
 						for(int k = 0; k < 5; k++)
 						{
 							worldObj.spawnParticle("portal", entityToAttack.posX + (rand.nextDouble() - 0.5D) * (double)width, (entityToAttack.posY + rand.nextDouble() * (double)height) - 0.25D, entityToAttack.posZ + (rand.nextDouble() - 0.5D) * (double)width, (rand.nextDouble() - 0.5D) * 2D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2D);
@@ -159,7 +160,7 @@ public class EntityWeepingAngel extends EntityMob
 							worldObj.spawnParticle("portal", entityToAttack.posX + (rand.nextDouble() - 0.5D) * (double)width, (entityToAttack.posY + rand.nextDouble() * (double)height) - 0.25D, entityToAttack.posZ + (rand.nextDouble() - 0.5D) * (double)width, (rand.nextDouble() - 0.5D) * 2D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2D);
 						}
 						worldObj.playSoundAtEntity(entityToAttack, "resources.teleport_activate", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
-						
+						entityToAttack = null;
 					}
 
 				}

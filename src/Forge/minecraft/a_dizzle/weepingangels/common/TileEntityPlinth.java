@@ -115,7 +115,6 @@ public class TileEntityPlinth extends TileEntity
 		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
-	@SideOnly(Side.CLIENT)
 	public int getRotation()
 	{
 		return this.rotation;
