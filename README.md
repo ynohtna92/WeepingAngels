@@ -1,7 +1,7 @@
 Weeping Angels Minecraft Mod  
 ===========================
 
-Current Minecraft Version: 1.4.5   
+Current Minecraft Version: 1.4.6(Partial)   
 Forge Version: 6.4.2.448  
 
 Author: A_dizzle  
