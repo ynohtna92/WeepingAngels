@@ -1,13 +1,21 @@
 package a_dizzle.weepingangels.common;
 
+import java.util.Iterator;
+
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.network.INetworkManager;
+import net.minecraft.src.ModLoader;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.world.World;
 
 public class TileEntityPlinth extends TileEntity
 {

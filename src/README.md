@@ -3,8 +3,8 @@ This Contains the src for all Major itterations of the Weeping Angels Mod.
 Forge (Continued)
 ------
 
-Minecraft Version: 1.4.5  
-Current Forge Version: 6.4.2.448
+Minecraft Version: 1.4.6  
+Current Forge Version: 6.5.0.481
 
 ModLoader (Discontinued)
 ------

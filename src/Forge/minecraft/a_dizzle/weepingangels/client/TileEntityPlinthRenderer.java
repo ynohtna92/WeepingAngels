@@ -1,20 +1,23 @@
 package a_dizzle.weepingangels.client;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.src.ModLoader;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import a_dizzle.weepingangels.common.EntityStatue;
 import a_dizzle.weepingangels.common.TileEntityPlinth;
 import a_dizzle.weepingangels.common.WeepingAngelsMod;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
+
+
+import net.minecraft.entity.Entity;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.src.ModLoader;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
 public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
