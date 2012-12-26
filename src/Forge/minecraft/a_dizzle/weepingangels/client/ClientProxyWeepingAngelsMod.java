@@ -3,17 +3,16 @@ package a_dizzle.weepingangels.client;
 import net.minecraft.src.ModLoader;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.registry.TickRegistry;
-import a_dizzle.weepingangels.client.RenderWeepingAngelStatue;
 import a_dizzle.weepingangels.common.CommonProxyWeepingAngelsMod;
 import a_dizzle.weepingangels.common.EntityStatue;
 import a_dizzle.weepingangels.common.EntityWeepingAngel;
 import a_dizzle.weepingangels.common.TileEntityPlinth;
 import a_dizzle.weepingangels.common.WeepingAngelsMod;
 import a_dizzle.weepingangels.common.WeepingAngelsMod_EventSounds;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 public class ClientProxyWeepingAngelsMod extends CommonProxyWeepingAngelsMod{
 

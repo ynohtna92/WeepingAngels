@@ -4,7 +4,7 @@ Forge (Continued)
 ------
 
 Minecraft Version: 1.4.6  
-Current Forge Version: 6.5.0.481
+Current Forge Version: 6.5.0.482
 
 ModLoader (Discontinued)
 ------
