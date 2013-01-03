@@ -106,12 +106,6 @@ public class BlockPlinth extends BlockContainer
 	}
 
 	@Override
-	public void onBlockAdded(World world, int i, int j, int k)
-	{
-		super.onBlockAdded(world, i, j, k);
-	}
-
-	@Override
 	public void breakBlock(World world, int i, int j, int k, int par5, int par6)
 	{
 		if(WeepingAngelsMod.DEBUG) System.out.println("BlockPlinth broken at i: " + i + " j: " + j + " k: " + k);

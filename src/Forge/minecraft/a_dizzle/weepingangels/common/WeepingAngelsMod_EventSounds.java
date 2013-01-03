@@ -14,7 +14,7 @@ public class WeepingAngelsMod_EventSounds {
 		try
 		{
 			event.manager.soundPoolSounds.addSound("resources/crumble.ogg", WeepingAngelsMod.class.getResource("/resources/crumble.ogg"));
-			event.manager.soundPoolSounds.addSound("resources/light.ogg", WeepingAngelsMod.class.getResource("/resourceslight.ogg"));
+			event.manager.soundPoolSounds.addSound("resources/light.ogg", WeepingAngelsMod.class.getResource("/resources/light.ogg"));
 			event.manager.soundPoolSounds.addSound("resources/stone1.ogg", WeepingAngelsMod.class.getResource("/resources/stone1.ogg"));
 			event.manager.soundPoolSounds.addSound("resources/stone2.ogg", WeepingAngelsMod.class.getResource("/resources/stone2.ogg"));
 			event.manager.soundPoolSounds.addSound("resources/stone3.ogg", WeepingAngelsMod.class.getResource("/resources/stone3.ogg"));
