@@ -138,13 +138,14 @@ public class EntityWeepingAngel extends EntityMob
 		if(entityToAttack != null && (entityToAttack instanceof EntityPlayer) && !canAngelBeSeenMultiplayer())
 		{
 			EntityPlayer entityPlayer = (EntityPlayer)entityToAttack;
-			if(rand.nextInt(40) != 1)
+			
+			//Always attack, but teleport sometimes as specified in the config
+			super.attackEntity(entity, f);
+			
+			if(rand.nextInt(100) <= WeepingAngelsMod.teleportChance)
 			{
-				super.attackEntity(entity, f);
-			} else
-			{
-				if(WeepingAngelsMod.canTeleport && !entityPlayer.capabilities.isCreativeMode){
-
+				if(!entityPlayer.capabilities.isCreativeMode)
+				{
 					if(getDistancetoEntityToAttack() <= 2)
 					{
 						worldObj.playSoundEffect(entityToAttack.posX, entityToAttack.posY, entityToAttack.posZ, "mob.ghast.scream", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);

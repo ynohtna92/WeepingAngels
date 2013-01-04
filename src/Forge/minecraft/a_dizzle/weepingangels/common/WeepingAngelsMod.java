@@ -42,7 +42,7 @@ public class WeepingAngelsMod
 
 	public static int spawnRate;
 	public static int maxSpawn;
-	public static boolean canTeleport;
+	public static int teleportChance;
 	public static int plinthBlockID;
 	public static int spawnBlockID;
 	public static int statueItemID;
@@ -69,7 +69,7 @@ public class WeepingAngelsMod
 			statueItemID = config.get(Configuration.CATEGORY_ITEM, "StatueItemID", 12034).getInt();
 			plinthBlockID = config.get(Configuration.CATEGORY_BLOCK, "PlinthBlockID", 3023).getInt();
 			spawnBlockID = config.get(Configuration.CATEGORY_BLOCK, "SpawnBlockID", 3024).getInt();
-			canTeleport = config.get(Configuration.CATEGORY_GENERAL, "CanTeleport", true).getBoolean(true);
+			teleportChance = config.get(Configuration.CATEGORY_GENERAL, "TeleportChance", 5).getInt();
 			spawnRate = config.get(Configuration.CATEGORY_GENERAL, "SpawnRate", 2).getInt();	
 			maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "MaxSpawnedPerInstance", 2).getInt();
 		}catch(Exception e)
