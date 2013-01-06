@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class EntityWeepingAngel extends EntityMob
 {
-	private int attackStrength = 1;
+	private int attackStrength;
 	private int torchTimer;
 	private int torchNextBreak;
 	private boolean breakOnePerTick;
@@ -42,6 +42,7 @@ public class EntityWeepingAngel extends EntityMob
 		this.texture = "/resources/weepingangel.png";
 		this.stepHeight = 1.0F;
 		this.health = 15;
+		this.attackStrength = WeepingAngelsMod.attackStrength;
 		this.isImmuneToFire = true;
 		torchNextBreak = rand.nextInt(800);
 		armMovement = false;
