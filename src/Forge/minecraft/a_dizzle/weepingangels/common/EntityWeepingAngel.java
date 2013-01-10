@@ -16,6 +16,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.*;
 
 public class EntityWeepingAngel extends EntityMob
 {
@@ -789,6 +790,13 @@ public class EntityWeepingAngel extends EntityMob
 			
 			//Use a testing boundingBox, so we don't have to move the player around to test if it is a valid location
 			AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(bbMinX, bbMinY, bbMinZ, bbMaxX, bbMaxY, bbMaxZ);
+			
+			// Make sure you are trying to teleport to a loaded chunk.
+			Chunk teleportChunk = worldObj.getChunkFromBlockCoords((int)newX, (int)newZ);
+			if (!teleportChunk.isChunkLoaded)
+			{
+				worldObj.getChunkProvider().loadChunk(teleportChunk.xPosition, teleportChunk.zPosition);
+			}
 			
 			// Move up, until nothing intersects the entity anymore
 			while (newY > 0 && newY < 128 && !this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty())
