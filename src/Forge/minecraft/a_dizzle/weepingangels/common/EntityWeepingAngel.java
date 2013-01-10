@@ -1,6 +1,8 @@
 package a_dizzle.weepingangels.common;
 
 import java.util.List;
+
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.block.Block;
 import net.minecraft.util.DamageSource;
 import net.minecraft.entity.Entity;
@@ -12,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class EntityWeepingAngel extends EntityMob
@@ -764,46 +767,58 @@ public class EntityWeepingAngel extends EntityMob
 	{
 		if(entity instanceof EntityPlayer)
 		{
-			int i = rand.nextInt(2);
-			int j = rand.nextInt(2);
-			int k = rand.nextInt(2);
-			int l = MathHelper.floor_double(posX);
-			int i1 = MathHelper.floor_double(posY);
-			int j1 = MathHelper.floor_double(posZ);
-			int k1 = l;
-			int l1 = i1;
-			int i2 = j1;
-			boolean flag = false;
-			do
+			int offsetX = rand.nextInt(200) - 100;
+			int offsetZ = rand.nextInt(200) - 100;
+			
+			//Center the values on a block, to make the boundingbox calculations match less.
+			double newX = MathHelper.floor_double(entity.posX) + offsetX + 0.5;
+			double newY = rand.nextInt(128);
+			double newZ = MathHelper.floor_double(entity.posZ) + offsetZ + 0.5;
+			
+			double bbMinX = newX - entity.width / 2.0;
+			double bbMinY = newY - entity.yOffset + entity.ySize;
+			double bbMinZ = newZ - entity.width / 2.0;
+			double bbMaxX = newX + entity.width / 2.0;
+			double bbMaxY = newY - entity.yOffset + entity.ySize + entity.height;
+			double bbMaxZ = newZ + entity.width / 2.0;
+			
+			//FMLLog.info("Teleporting from: "+(int)entity.posX+" "+(int)entity.posY+" "+(int)entity.posZ);
+			//FMLLog.info("Teleporting with offsets: "+offsetX+" "+newY+" "+offsetZ);
+			//FMLLog.info("Starting BB Bounds: "+bbMinX+" "+bbMinY+" "+bbMinZ+" "+bbMaxX+" "+bbMaxY+" "+bbMaxZ);
+			
+			//Use a testing boundingBox, so we don't have to move the player around to test if it is a valid location
+			AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(bbMinX, bbMinY, bbMinZ, bbMaxX, bbMaxY, bbMaxZ);
+			
+			// Move up, until nothing intersects the entity anymore
+			while (!this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty())
 			{
-				if(flag)
-				{
-					break;
-				}
-				int j2 = rand.nextInt(200);
-				int k2 = rand.nextInt(128);
-				int l2 = rand.nextInt(200);
-				k1 = i != 0 ? l - j2 : l + j2;
-				l1 = j != 0 ? i1 - k2 : i1 + k2;
-				i2 = k != 0 ? j1 - l2 : j1 + l2;
-				if(worldObj.blockExists(k1, l1, i2))
-				{
-					int i3 = worldObj.getBlockId(k1, l1, i2);
-					if(i3 == 1 || i3 == 2 || i3 == 3 || i3 == 4 || i3 == 5 || i3 == 12 || i3 == 13 || i3 == 24 || i3 == 16)
-					{
-						int j3 = worldObj.getBlockId(k1, l1 + 1, i2);
-						if(worldObj.blockExists(k1, l1 + 1, i2) && j3 == 0)
-						{
-							int k3 = worldObj.getBlockId(k1, l1 + 2, i2);
-							if(worldObj.blockExists(k1, l1 + 2, i2) && k3 == 0)
-							{
-								flag = true;
-							}
-						}
-					}
-				}
-			} while(true);
-			entity.setLocationAndAngles(k1, (double)l1 + 1.0D, i2, entity.rotationYaw, entity.rotationPitch);
+				++newY;
+				
+				bbMinY = newY - entity.yOffset + entity.ySize;
+				bbMaxY = newY - entity.yOffset + entity.ySize + entity.height;
+				
+				boundingBox.setBounds(bbMinX, bbMinY, bbMinZ, bbMaxX, bbMaxY, bbMaxZ);
+				
+				//FMLLog.info("Failed to teleport, retrying at height: "+(int)newY);
+			}
+			
+			//If we could place it, could we have placed it lower? To prevent teleports really high up.
+			do 
+			{
+				--newY;
+				
+				bbMinY = newY - entity.yOffset + entity.ySize;
+				bbMaxY = newY - entity.yOffset + entity.ySize + entity.height;
+				
+				boundingBox.setBounds(bbMinX, bbMinY, bbMinZ, bbMaxX, bbMaxY, bbMaxZ);
+				
+				//FMLLog.info("Trying a lower teleport at height: "+(int)newY);
+			}
+			while (this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty());
+			
+			//Set the location of the player, on the final position, one higher Y, as the last lower placing test failed.
+			entity.setLocationAndAngles(newX, ++newY, newZ, entity.rotationYaw, entity.rotationPitch);
+			FMLLog.info("Succesfully teleported to: "+(int)entity.posX+" "+(int)entity.posY+" "+(int)entity.posZ);
 		}
 	}
 
