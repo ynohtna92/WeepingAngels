@@ -767,8 +767,9 @@ public class EntityWeepingAngel extends EntityMob
 	{
 		if(entity instanceof EntityPlayer)
 		{
-			int offsetX = rand.nextInt(200) - 100;
-			int offsetZ = rand.nextInt(200) - 100;
+			int rangeDifference = 2 * (WeepingAngelsMod.teleportRangeMax - WeepingAngelsMod.teleportRangeMin);
+			int offsetX = rand.nextInt(rangeDifference) - rangeDifference/2 + WeepingAngelsMod.teleportRangeMin;
+			int offsetZ = rand.nextInt(rangeDifference) - rangeDifference/2 + WeepingAngelsMod.teleportRangeMin;
 			
 			//Center the values on a block, to make the boundingbox calculations match less.
 			double newX = MathHelper.floor_double(entity.posX) + offsetX + 0.5;
@@ -790,7 +791,7 @@ public class EntityWeepingAngel extends EntityMob
 			AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(bbMinX, bbMinY, bbMinZ, bbMaxX, bbMaxY, bbMaxZ);
 			
 			// Move up, until nothing intersects the entity anymore
-			while (!this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty())
+			while (newY > 0 && newY < 128 && !this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty())
 			{
 				++newY;
 				
@@ -814,11 +815,11 @@ public class EntityWeepingAngel extends EntityMob
 				
 				//FMLLog.info("Trying a lower teleport at height: "+(int)newY);
 			}
-			while (this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty());
+			while (newY > 0 && newY < 128 && this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty());
 			
 			//Set the location of the player, on the final position, one higher Y, as the last lower placing test failed.
 			entity.setLocationAndAngles(newX, ++newY, newZ, entity.rotationYaw, entity.rotationPitch);
-			FMLLog.info("Succesfully teleported to: "+(int)entity.posX+" "+(int)entity.posY+" "+(int)entity.posZ);
+			//FMLLog.info("Succesfully teleported to: "+(int)entity.posX+" "+(int)entity.posY+" "+(int)entity.posZ);
 		}
 	}
 
