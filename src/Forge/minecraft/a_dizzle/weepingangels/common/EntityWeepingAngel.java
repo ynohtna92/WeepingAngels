@@ -1,6 +1,8 @@
 package a_dizzle.weepingangels.common;
 
 import java.util.List;
+
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.block.Block;
 import net.minecraft.util.DamageSource;
 import net.minecraft.entity.Entity;
@@ -12,7 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.*;
 
 public class EntityWeepingAngel extends EntityMob
 {
@@ -764,46 +768,80 @@ public class EntityWeepingAngel extends EntityMob
 	{
 		if(entity instanceof EntityPlayer)
 		{
-			int i = rand.nextInt(2);
-			int j = rand.nextInt(2);
-			int k = rand.nextInt(2);
-			int l = MathHelper.floor_double(posX);
-			int i1 = MathHelper.floor_double(posY);
-			int j1 = MathHelper.floor_double(posZ);
-			int k1 = l;
-			int l1 = i1;
-			int i2 = j1;
-			boolean flag = false;
-			do
+			int rangeDifference = 2 * (WeepingAngelsMod.teleportRangeMax - WeepingAngelsMod.teleportRangeMin);
+			int offsetX = rand.nextInt(rangeDifference) - rangeDifference/2 + WeepingAngelsMod.teleportRangeMin;
+			int offsetZ = rand.nextInt(rangeDifference) - rangeDifference/2 + WeepingAngelsMod.teleportRangeMin;
+			
+			//Center the values on a block, to make the boundingbox calculations match less.
+			double newX = MathHelper.floor_double(entity.posX) + offsetX + 0.5;
+			double newY = rand.nextInt(128);
+			double newZ = MathHelper.floor_double(entity.posZ) + offsetZ + 0.5;
+			
+			double bbMinX = newX - entity.width / 2.0;
+			double bbMinY = newY - entity.yOffset + entity.ySize;
+			double bbMinZ = newZ - entity.width / 2.0;
+			double bbMaxX = newX + entity.width / 2.0;
+			double bbMaxY = newY - entity.yOffset + entity.ySize + entity.height;
+			double bbMaxZ = newZ + entity.width / 2.0;
+			
+			//FMLLog.info("Teleporting from: "+(int)entity.posX+" "+(int)entity.posY+" "+(int)entity.posZ);
+			//FMLLog.info("Teleporting with offsets: "+offsetX+" "+newY+" "+offsetZ);
+			//FMLLog.info("Starting BB Bounds: "+bbMinX+" "+bbMinY+" "+bbMinZ+" "+bbMaxX+" "+bbMaxY+" "+bbMaxZ);
+			
+			//Use a testing boundingBox, so we don't have to move the player around to test if it is a valid location
+			AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(bbMinX, bbMinY, bbMinZ, bbMaxX, bbMaxY, bbMaxZ);
+			
+			// Make sure you are trying to teleport to a loaded chunk.
+			Chunk teleportChunk = worldObj.getChunkFromBlockCoords((int)newX, (int)newZ);
+			if (!teleportChunk.isChunkLoaded)
 			{
-				if(flag)
-				{
-					break;
-				}
-				int j2 = rand.nextInt(200);
-				int k2 = rand.nextInt(128);
-				int l2 = rand.nextInt(200);
-				k1 = i != 0 ? l - j2 : l + j2;
-				l1 = j != 0 ? i1 - k2 : i1 + k2;
-				i2 = k != 0 ? j1 - l2 : j1 + l2;
-				if(worldObj.blockExists(k1, l1, i2))
-				{
-					int i3 = worldObj.getBlockId(k1, l1, i2);
-					if(i3 == 1 || i3 == 2 || i3 == 3 || i3 == 4 || i3 == 5 || i3 == 12 || i3 == 13 || i3 == 24 || i3 == 16)
-					{
-						int j3 = worldObj.getBlockId(k1, l1 + 1, i2);
-						if(worldObj.blockExists(k1, l1 + 1, i2) && j3 == 0)
-						{
-							int k3 = worldObj.getBlockId(k1, l1 + 2, i2);
-							if(worldObj.blockExists(k1, l1 + 2, i2) && k3 == 0)
-							{
-								flag = true;
-							}
-						}
-					}
-				}
-			} while(true);
-			entity.setLocationAndAngles(k1, (double)l1 + 1.0D, i2, entity.rotationYaw, entity.rotationPitch);
+				worldObj.getChunkProvider().loadChunk(teleportChunk.xPosition, teleportChunk.zPosition);
+			}
+			
+			// Move up, until nothing intersects the entity anymore
+			while (newY > 0 && newY < 128 && !this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty())
+			{
+				++newY;
+				
+				bbMinY = newY - entity.yOffset + entity.ySize;
+				bbMaxY = newY - entity.yOffset + entity.ySize + entity.height;
+				
+				boundingBox.setBounds(bbMinX, bbMinY, bbMinZ, bbMaxX, bbMaxY, bbMaxZ);
+				
+				//FMLLog.info("Failed to teleport, retrying at height: "+(int)newY);
+			}
+			
+			//If we could place it, could we have placed it lower? To prevent teleports really high up.
+			do 
+			{
+				--newY;
+				
+				bbMinY = newY - entity.yOffset + entity.ySize;
+				bbMaxY = newY - entity.yOffset + entity.ySize + entity.height;
+				
+				boundingBox.setBounds(bbMinX, bbMinY, bbMinZ, bbMaxX, bbMaxY, bbMaxZ);
+				
+				//FMLLog.info("Trying a lower teleport at height: "+(int)newY);
+			}
+			while (newY > 0 && newY < 128 && this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty());
+			//Set Y one higher, as the last lower placing test failed.
+			++newY;
+					
+			//Check for placement in lava
+			//NOTE: This can potentially hang the game indefinitely, due to random recursion
+			//However this situation is highly unlikelely
+			//My advice: Dont encounter Weeping Angels in seas of lava
+			//NOTE: This can theoretically still teleport you to a block of lava with air underneath, but gladly lava spreads ;)
+			int blockId = worldObj.getBlockId(MathHelper.floor_double(newX), MathHelper.floor_double(newY), MathHelper.floor_double(newZ));
+			if (blockId == 10 || blockId == 11)
+			{
+				teleportPlayer(entity);
+				return;
+			}
+			
+			//Set the location of the player, on the final position.
+			entity.setLocationAndAngles(newX, newY, newZ, entity.rotationYaw, entity.rotationPitch);
+			//FMLLog.info("Succesfully teleported to: "+(int)entity.posX+" "+(int)entity.posY+" "+(int)entity.posZ);
 		}
 	}
 
