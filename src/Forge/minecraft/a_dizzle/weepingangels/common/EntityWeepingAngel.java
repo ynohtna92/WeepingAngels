@@ -824,9 +824,23 @@ public class EntityWeepingAngel extends EntityMob
 				//FMLLog.info("Trying a lower teleport at height: "+(int)newY);
 			}
 			while (newY > 0 && newY < 128 && this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty());
+			//Set Y one higher, as the last lower placing test failed.
+			++newY;
+					
+			//Check for placement in lava
+			//NOTE: This can potentially hang the game indefinitely, due to random recursion
+			//However this situation is highly unlikelely
+			//My advice: Dont encounter Weeping Angels in seas of lava
+			//NOTE: This can theoretically still teleport you to a block of lava with air underneath, but gladly lava spreads ;)
+			int blockId = worldObj.getBlockId(MathHelper.floor_double(newX), MathHelper.floor_double(newY), MathHelper.floor_double(newZ));
+			if (blockId == 10 || blockId == 11)
+			{
+				teleportPlayer(entity);
+				return;
+			}
 			
-			//Set the location of the player, on the final position, one higher Y, as the last lower placing test failed.
-			entity.setLocationAndAngles(newX, ++newY, newZ, entity.rotationYaw, entity.rotationPitch);
+			//Set the location of the player, on the final position.
+			entity.setLocationAndAngles(newX, newY, newZ, entity.rotationYaw, entity.rotationPitch);
 			//FMLLog.info("Succesfully teleported to: "+(int)entity.posX+" "+(int)entity.posY+" "+(int)entity.posZ);
 		}
 	}
