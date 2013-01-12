@@ -11,7 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityPlinth extends TileEntity
 {
-	public int statueType = WeepingAngelsMod.statue.shiftedIndex;
+	public int statueType = WeepingAngelsMod.statue.itemID;
 	public String signText[] = {
 			"", ""
 	};

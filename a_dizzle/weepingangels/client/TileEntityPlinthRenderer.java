@@ -1,18 +1,28 @@
-package net.minecraft.src;
+package a_dizzle.weepingangels.client;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.src.ModLoader;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
-// Referenced classes of package net.minecraft.src:
-//            TileEntitySpecialRenderer, SignModel, TileEntityPlinth, EntityStatue, 
-//            ModLoader, World, FontRenderer, mod_statues, 
-//            Item, EntityCreeperStatue, EntitySkeletonStatue, EntityPigStatue, 
-//            EntityZombieStatue, EntitySpiderStatue, EntityCowStatue, EntityHoneydewStatue, 
-//            EntityXephosStatue, ModelRenderer, TileEntity
+import a_dizzle.weepingangels.common.EntityStatue;
+import a_dizzle.weepingangels.common.TileEntityPlinth;
+import a_dizzle.weepingangels.common.WeepingAngelsMod;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
 {
-
+	public static TileEntityPlinthRenderer instance;
+	public static ModelWeepingAngel modelWeepingAngel = new ModelWeepingAngel();
+    //private SignModel signModel;
+	
     public TileEntityPlinthRenderer()
     {
         instance = this;
@@ -24,13 +34,12 @@ public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
         GL11.glPushMatrix();
         float f1 = 0.6666667F;
         int i = tileentityplinth.getBlockMetadata();
-        EntityStatue entitystatue = null;
-        if(tileentityplinth.statueEntity == null)
+ 
+        if(i == 1)
         {
-            entitystatue = LoadStatue(tileentityplinth.statueType);
-        }
-        if(entitystatue != null)
-        {
+        	//System.out.println("Running!");
+ 
+        	/*
             entitystatue.setLocationAndAngles((double)tileentityplinth.xCoord + 0.5D, (double)tileentityplinth.yCoord + 0.5D, (double)tileentityplinth.zCoord + 0.5D, 0.0F, 0.0F);
             entitystatue.onGround = true;
             if(i == 8)
@@ -47,7 +56,26 @@ public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
             }
             ModLoader.getMinecraftInstance().theWorld.spawnEntityInWorld(entitystatue);
             tileentityplinth.statueEntity = entitystatue;
-        }
+            
+            entitystatue.setLocationAndAngles((double)tileentityplinth.xCoord + 0.5D, (double)tileentityplinth.yCoord + 0.5D, (double)tileentityplinth.zCoord + 0.5D, (float)(tileentityplinth.getRotation()* 360) / 16f, 0.0F);
+        	entitystatue.onGround = true;     
+            FMLClientHandler.instance().getClient().theWorld.spawnEntityInWorld(entitystatue);
+            tileentityplinth.statueEntity = entitystatue;  
+            */   
+        	
+            this.bindTextureByName("/resources/weepingangel.png");
+            GL11.glPushMatrix();
+            GL11.glDisable(GL11.GL_CULL_FACE);       
+            GL11.glTranslatef((float)d + 0.5F, (float)d1 + 2.0f, (float)d2 + 0.5F);
+            float var10 = 0.0625F;
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            GL11.glScalef(-1.0F, -1.0F, 1.0F);
+            GL11.glRotatef((float)(tileentityplinth.getRotation() * 360) / 16.0F + 180.0f, 0.0f, 1.0f, 0.0f);
+            GL11.glEnable(GL11.GL_ALPHA_TEST);
+            modelWeepingAngel.render((Entity)null, 0.0F, 0.0F, 0.0F, (float)(tileentityplinth.getRotation() * 360) / 16.0F, 0.0F, var10);
+            GL11.glPopMatrix();
+              
+    	}
         float f2 = 0.0F;
         if(i == 8)
         {
@@ -99,8 +127,8 @@ public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
 
     private EntityStatue LoadStatue(int i)
     {
-        World world = ModLoader.getMinecraftInstance().theWorld;
-        if(i == mod_WeepingAngel.statue.shiftedIndex)
+        World world = ModLoader.getMinecraftServerInstance().worldServers[0];
+        if(i == WeepingAngelsMod.statue.itemID)
         {
             return new EntityStatue(world);
         }
@@ -150,12 +178,10 @@ public class TileEntityPlinthRenderer extends TileEntitySpecialRenderer
         GL11.glPopMatrix();
     }
 
-    public void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2, 
-            float f)
-    {
-        renderTileEntitySignAt((TileEntityPlinth)tileentity, d, d1, d2, f);
-    }
-
-    public static TileEntityPlinthRenderer instance;
-    //private SignModel signModel;
+	@Override
+	public void renderTileEntityAt(TileEntity var1, double var2, double var4,
+			double var6, float var8) {
+		renderTileEntitySignAt((TileEntityPlinth)var1, var2, var4, var6, var8);
+		
+	}
 }

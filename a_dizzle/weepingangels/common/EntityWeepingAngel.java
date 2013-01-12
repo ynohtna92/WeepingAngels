@@ -89,7 +89,7 @@ public class EntityWeepingAngel extends EntityMob
 	@Override
 	protected void dropRareDrop(int par1)
 	{
-		dropItem(WeepingAngelsMod.statue.shiftedIndex, 1);
+		dropItem(WeepingAngelsMod.statue.itemID, 1);
 	}
 
 	@Override
@@ -123,12 +123,12 @@ public class EntityWeepingAngel extends EntityMob
 			ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 			if(worldObj.difficultySetting > 2)
 			{
-				if(itemstack != null && (itemstack.itemID == Item.pickaxeDiamond.shiftedIndex || itemstack.canHarvestBlock(Block.obsidian)))
+				if(itemstack != null && (itemstack.itemID == Item.pickaxeDiamond.itemID || itemstack.canHarvestBlock(Block.obsidian)))
 				{
 					super.attackEntityFrom(damagesource, i);
 				}
 			} else
-				if(itemstack != null && (itemstack.itemID == Item.pickaxeDiamond.shiftedIndex || itemstack.itemID == Item.pickaxeSteel.shiftedIndex || (itemstack.canHarvestBlock(Block.oreDiamond) && (itemstack.itemID != Item.pickaxeGold.shiftedIndex))))
+				if(itemstack != null && (itemstack.itemID == Item.pickaxeDiamond.itemID || itemstack.itemID == Item.pickaxeSteel.itemID || (itemstack.canHarvestBlock(Block.oreDiamond) && (itemstack.itemID != Item.pickaxeGold.itemID))))
 				{
 					super.attackEntityFrom(damagesource, i);
 				}

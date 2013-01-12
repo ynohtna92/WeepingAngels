@@ -12,7 +12,7 @@ public class EntityStatue extends EntityLiving
 	public EntityStatue(World world)
 	{
 		super(world);
-		dropId = WeepingAngelsMod.statue.shiftedIndex;
+		dropId = WeepingAngelsMod.statue.itemID;
 		livingEntity = EntityWeepingAngel.class;
 		texture = "/angels/weepingangel.png";
 	}

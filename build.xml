@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Weeping Angels" basedir="../../../" default="main">
+    
+    <!-- Properties -->
+    <property name="mcp.dir" location="mcp"/>
+    <property name="src.dir" location="${mcp.dir}/src/minecraft"/>
+    <property name="reobf.dir" location="${mcp.dir}/reobf/minecraft"/>
+    <property name="build.dir" location="${mcp.dir}/build"/>
+    <property name="dist.dir" location="${mcp.dir}/dist"/>
+    
+    <property name="wa.version" value="158"/>
+    <property name="minecraft.version" value="147"/>
+    <property name="forge.version" value="6.6.0.497"/>
+    
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+    
+    <target name="recompile" depends="clean">
+        <exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
+            <arg line="/c recompile.bat"/>
+        </exec>
+    </target>
+    
+    <target name="reobfuscate" depends="recompile">
+        <exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
+            <arg line="/c reobfuscate.bat"/>
+        </exec>
+    </target>
+    
+    <target name="build" depends="reobfuscate">
+        <mkdir dir="${build.dir}/"/>
+        
+        <copy todir="${build.dir}/">
+            <fileset dir="${reobf.dir}"/>
+        </copy>
+        <copy todir="${build.dir}/resources">
+            <fileset dir="${src.dir}/resources"/>
+        </copy>     
+        <copy file="${src.dir}/mcmod.info" todir="${build.dir}/"/>
+        <copy file="${src.dir}/build.xml" todir="${build.dir}"/>
+        
+    </target>
+    
+    <target name="package" depends="build">
+        <!--  Zip the build -->
+        <zip destfile="${dist.dir}/${minecraft.version}-${wa.version}WeepingAngels.zip" basedir="${build.dir}" excludes="build.xml"/>
+    </target>
+    
+    <target name="main" depends="package"/>
+
+</project>

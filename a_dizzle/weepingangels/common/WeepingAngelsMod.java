@@ -32,7 +32,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod( modid = "WeepingAngelsMod", name = "Weeping Angels Mod", version = "1.5.7")
+@Mod( modid = "WeepingAngelsMod", name = "Weeping Angels Mod", version = "1.5.8")
 @NetworkMod(clientSideRequired=true, serverSideRequired=false, channels = {"statue"}, packetHandler = PacketHandler.class)
 public class WeepingAngelsMod 
 {
