@@ -128,7 +128,7 @@ public class EntityWeepingAngel extends EntityMob
 					super.attackEntityFrom(damagesource, i);
 				}
 			} else
-				if(itemstack != null && (itemstack.itemID == Item.pickaxeDiamond.itemID || itemstack.itemID == Item.pickaxeSteel.itemID || (itemstack.canHarvestBlock(Block.oreDiamond) && (itemstack.itemID != Item.pickaxeGold.itemID))))
+				if(itemstack != null && (itemstack.itemID == Item.pickaxeDiamond.itemID || itemstack.itemID == Item.pickaxeIron.itemID || (itemstack.canHarvestBlock(Block.oreDiamond) && (itemstack.itemID != Item.pickaxeGold.itemID))))
 				{
 					super.attackEntityFrom(damagesource, i);
 				}
@@ -696,7 +696,7 @@ public class EntityWeepingAngel extends EntityMob
 					if(!breakOnePerTick)
 					{
 						block.dropBlockAsItem(worldObj, k2, l2, i3, 1, 1);
-						worldObj.setBlockWithNotify(k2, l2, i3, 0);
+						worldObj.setBlockToAir(k2, l2, i3);
 						worldObj.playSoundAtEntity(this, "resources.light", getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
 						breakOnePerTick = true;
 					}
@@ -799,7 +799,7 @@ public class EntityWeepingAngel extends EntityMob
 			}
 			
 			// Move up, until nothing intersects the entity anymore
-			while (newY > 0 && newY < 128 && !this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty())
+			while (newY > 0 && newY < 128 && !this.worldObj.getCollidingBoundingBoxes(entity, boundingBox).isEmpty())
 			{
 				++newY;
 				
@@ -823,7 +823,7 @@ public class EntityWeepingAngel extends EntityMob
 				
 				//FMLLog.info("Trying a lower teleport at height: "+(int)newY);
 			}
-			while (newY > 0 && newY < 128 && this.worldObj.getAllCollidingBoundingBoxes(boundingBox).isEmpty());
+			while (newY > 0 && newY < 128 && this.worldObj.getCollidingBoundingBoxes(entity, boundingBox).isEmpty());
 			//Set Y one higher, as the last lower placing test failed.
 			++newY;
 					

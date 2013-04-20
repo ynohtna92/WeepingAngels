@@ -5,11 +5,14 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -38,7 +41,7 @@ public class BlockPlinth extends BlockContainer
 			boolean flag = world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k);
 			if(flag)
 			{
-				world.scheduleBlockUpdate(i, j, k, blockID, tickRate());
+				world.scheduleBlockUpdate(i, j, k, blockID, tickRate(world));
 			}
 		}
 	}
@@ -143,4 +146,9 @@ public class BlockPlinth extends BlockContainer
 			throw new RuntimeException(exception);
 		}
 	}
+	@SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister par1IconRegister)
+    {
+        this.blockIcon = par1IconRegister.registerIcon("weepingangels:plinth");
+    }
 }
