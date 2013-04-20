@@ -93,9 +93,9 @@ public class WeepingAngelsMod
 	public void load(FMLInitializationEvent event)
 	{
 		
-		plinthBlock = (new BlockPlinth(plinthBlockID, TileEntityPlinth.class, Material.rock)).setHardness(2.0F).setResistance(10F).setStepSound(Block.soundStoneFootstep).setBlockName("Plinth");		
-		blockWeepingAngelSpawn = new BlockWeepingAngelSpawn(spawnBlockID, 1).setHardness(0.5F).setBlockName("weepingangelspawn").setCreativeTab(CreativeTabs.tabMisc);	
-		statue = (new ItemStatue(statueItemID, EntityStatue.class)).setItemName("Statue").setCreativeTab(CreativeTabs.tabMisc).setMaxStackSize(64);
+		plinthBlock = (new BlockPlinth(plinthBlockID, TileEntityPlinth.class, Material.rock)).setHardness(2.0F).setResistance(10F).setStepSound(Block.soundStoneFootstep).setUnlocalizedName("Plinth");		
+		blockWeepingAngelSpawn = new BlockWeepingAngelSpawn(spawnBlockID, 1).setHardness(0.5F).setUnlocalizedName("weepingangelspawn").setCreativeTab(CreativeTabs.tabMisc);	
+		statue = (new ItemStatue(statueItemID, EntityStatue.class)).setUnlocalizedName("Statue").setCreativeTab(CreativeTabs.tabMisc).setMaxStackSize(64);
 
 		// Register all entities, blocks and items to game
 		//Weeping Angel Entity

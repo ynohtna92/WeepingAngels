@@ -27,20 +27,11 @@ public class ClientProxyWeepingAngelsMod extends CommonProxyWeepingAngelsMod{
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlinth.class, new TileEntityPlinthRenderer());
 		ModLoader.registerTileEntity(TileEntityPlinth.class, "TileEntityPlinth", new TileEntityPlinthRenderer());
 		
-		WeepingAngelsMod.plinthBlock.blockIndexInTexture = ModLoader.addOverride("/terrain.png", "/resources/plinth.png");
-		WeepingAngelsMod.statue.setIconIndex(ModLoader.addOverride("/gui/items.png", "/resources/statue.png"));
 	}
 
 	public void preInit()
 	{
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new WeepingAngelsMod_EventSounds());
-		
-		MinecraftForgeClient.preloadTexture("/resources/plinth.png");
-	    MinecraftForgeClient.preloadTexture("/resources/statue.png");
-	    MinecraftForgeClient.preloadTexture("/resources/weepingangel.png");
-	    MinecraftForgeClient.preloadTexture("/resources/weepingangel-angry.png");
-	    MinecraftForgeClient.preloadTexture("/resources/weepingangelXMAS.png");
-	    MinecraftForgeClient.preloadTexture("/resources/weepingangel-angryXMAS.png");
 	}
 }
