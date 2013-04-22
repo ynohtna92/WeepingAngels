@@ -4,8 +4,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -68,10 +71,10 @@ public class ItemStatue extends Item
 		if(l == 1)
 		{
 			statueYaw = MathHelper.floor_double((double)((entityplayer.rotationYaw + 180f) * 16.0F / 360.0F) + 0.5D) & 15;
-			world.setBlockAndMetadataWithNotify(i, j, k, WeepingAngelsMod.plinthBlock.blockID, 1);
+			world.setBlock(i, j, k, WeepingAngelsMod.plinthBlock.blockID, 1, 3);
 		} else
 		{
-			world.setBlockAndMetadataWithNotify(i, j, k, WeepingAngelsMod.plinthBlock.blockID, l);
+			world.setBlock(i, j, k, WeepingAngelsMod.plinthBlock.blockID, l, 3);
 		}
 		EntityStatue entitystatue = null;
 		try
@@ -111,5 +114,9 @@ public class ItemStatue extends Item
         }*/
         return true;
 	}
-
+	@SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister par1IconRegister)
+    {
+        this.itemIcon = par1IconRegister.registerIcon("weepingangels:statue");
+    }
 }
