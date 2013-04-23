@@ -8,9 +8,9 @@
     <property name="build.dir" location="${mcp.dir}/build"/>
     <property name="dist.dir" location="${mcp.dir}/dist"/>
     
-    <property name="wa.version" value="158"/>
-    <property name="minecraft.version" value="147"/>
-    <property name="forge.version" value="6.6.0.497"/>
+    <property name="wa.version" value="159"/>
+    <property name="minecraft.version" value="151"/>
+    <property name="forge.version" value="7.7.1.643"/>
     
     <target name="clean">
         <delete dir="${build.dir}"/>
@@ -37,7 +37,10 @@
         </copy>
         <copy todir="${build.dir}/resources">
             <fileset dir="${src.dir}/resources"/>
-        </copy>     
+        </copy>
+        <copy todir="${build.dir}/mods">
+            <fileset dir="${src.dir}/mods"/>
+        </copy>
         <copy file="${src.dir}/mcmod.info" todir="${build.dir}/"/>
         <copy file="${src.dir}/build.xml" todir="${build.dir}"/>
         
