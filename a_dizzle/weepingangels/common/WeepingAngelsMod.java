@@ -65,26 +65,20 @@ public class WeepingAngelsMod
 		proxy.preInit();
 
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
-		try
+		config.load(); // load configs from its file
+		entityWeepingAngelID = config.get(Configuration.CATEGORY_GENERAL, "EntityWeepingAngelID", 300).getInt();
+		statueItemID = config.get(Configuration.CATEGORY_ITEM, "StatueItemID", 12034).getInt();
+		plinthBlockID = config.get(Configuration.CATEGORY_BLOCK, "PlinthBlockID", 3023).getInt();
+		spawnBlockID = config.get(Configuration.CATEGORY_BLOCK, "SpawnBlockID", 3024).getInt();
+		attackStrength = config.get(Configuration.CATEGORY_GENERAL, "AttackStrength", 2).getInt();
+		teleportChance = config.get(Configuration.CATEGORY_GENERAL, "TeleportChance", 5).getInt();
+		teleportRangeMin = config.get(Configuration.CATEGORY_GENERAL, "TeleportRangeMin", 0).getInt();
+		teleportRangeMax = config.get(Configuration.CATEGORY_GENERAL, "TeleportRangeMax", 100).getInt();
+		maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "MaxSpawnedPerInstance", 2).getInt();
+		spawnRate = config.get(Configuration.CATEGORY_GENERAL, "SpawnRate", 2).getInt();	
+		maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "MaxSpawnedPerInstance", 2).getInt();
+		if(config.hasChanged())
 		{
-			config.load(); // load configs from its file
-			entityWeepingAngelID = config.get(Configuration.CATEGORY_GENERAL, "EntityWeepingAngelID", 300).getInt();
-			statueItemID = config.get(Configuration.CATEGORY_ITEM, "StatueItemID", 12034).getInt();
-			plinthBlockID = config.get(Configuration.CATEGORY_BLOCK, "PlinthBlockID", 3023).getInt();
-			spawnBlockID = config.get(Configuration.CATEGORY_BLOCK, "SpawnBlockID", 3024).getInt();
-			attackStrength = config.get(Configuration.CATEGORY_GENERAL, "AttackStrength", 2).getInt();
-			teleportChance = config.get(Configuration.CATEGORY_GENERAL, "TeleportChance", 5).getInt();
-			teleportRangeMin = config.get(Configuration.CATEGORY_GENERAL, "TeleportRangeMin", 0).getInt();
-			teleportRangeMax = config.get(Configuration.CATEGORY_GENERAL, "TeleportRangeMax", 100).getInt();
-			maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "MaxSpawnedPerInstance", 2).getInt();
-			spawnRate = config.get(Configuration.CATEGORY_GENERAL, "SpawnRate", 2).getInt();	
-			maxSpawn = config.get(Configuration.CATEGORY_GENERAL, "MaxSpawnedPerInstance", 2).getInt();
-		}catch(Exception e)
-		{
-			FMLLog.log(Level.SEVERE, e, "Weeping Angels Mod failed to load configurations");
- 			FMLLog.severe(e.getMessage());
-		}
-		finally{
 			config.save(); // Configs saved to its file
 		}
 	}
@@ -99,10 +93,10 @@ public class WeepingAngelsMod
 
 		// Register all entities, blocks and items to game
 		//Weeping Angel Entity
-		//EntityRegistry.registerModEntity(EntityWeepingAngel.class, "Weeping Angel", 1, this, 80, 3, true);
-		//EntityList.IDtoClassMapping.put(entityWeepingAngelID, EntityWeepingAngel.class);
-		//EntityList.entityEggs.put(entityWeepingAngelID, new EntityEggInfo(entityWeepingAngelID, 0, 0xffffff));
-		EntityRegistry.registerGlobalEntityID(EntityWeepingAngel.class, "Weeping Angel", ModLoader.getUniqueEntityId(), 0x00000, 0xffffff);
+		EntityRegistry.registerModEntity(EntityWeepingAngel.class, "Weeping Angel", entityWeepingAngelID, this, 80, 3, true);
+		EntityList.IDtoClassMapping.put(entityWeepingAngelID, EntityWeepingAngel.class);
+		EntityList.entityEggs.put(entityWeepingAngelID, new EntityEggInfo(entityWeepingAngelID, 0, 0xffffff));
+		//EntityRegistry.registerGlobalEntityID(EntityWeepingAngel.class, "Weeping Angel", ModLoader.getUniqueEntityId(), 0x00000, 0xffffff);
 		if(spawnRate != 0){
 			EntityRegistry.addSpawn(EntityWeepingAngel.class, spawnRate, 1, maxSpawn, EnumCreatureType.monster, new BiomeGenBase[] {
 				BiomeGenBase.iceMountains,
@@ -121,7 +115,7 @@ public class WeepingAngelsMod
 				BiomeGenBase.extremeHillsEdge
 		});
 		}
-		LanguageRegistry.instance().addStringLocalization("entity.Weeping Angel.name", "Weeping Angel");
+		LanguageRegistry.instance().addStringLocalization("entity.WeepingAngelsMod.Weeping Angel.name", "Weeping Angel");
 
 		//Spawn Block Entity
 		LanguageRegistry.addName(blockWeepingAngelSpawn, "Weeping Angel Spawn Block");
