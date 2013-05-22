@@ -8,9 +8,9 @@
     <property name="build.dir" location="${mcp.dir}/build"/>
     <property name="dist.dir" location="${mcp.dir}/dist"/>
     
-    <property name="wa.version" value="159"/>
-    <property name="minecraft.version" value="151"/>
-    <property name="forge.version" value="7.7.1.643"/>
+    <property name="wa.version" value="1510"/>
+    <property name="minecraft.version" value="152"/>
+    <property name="forge.version" value="7.8.0.708"/>
     
     <target name="clean">
         <delete dir="${build.dir}"/>
