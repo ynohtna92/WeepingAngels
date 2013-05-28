@@ -147,7 +147,7 @@ public class EntityWeepingAngel extends EntityMob
 			//Always attack, but teleport sometimes as specified in the config
 			super.attackEntity(entity, f);
 			
-			if(rand.nextInt(100) <= WeepingAngelsMod.teleportChance)
+			if(rand.nextInt(100) < WeepingAngelsMod.teleportChance)
 			{
 				if(!entityPlayer.capabilities.isCreativeMode)
 				{
